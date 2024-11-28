@@ -4,4 +4,4 @@ This course is an introduction to modern web development with JavaScript. The ma
 
 Other topics include debugging applications, container technology, configuration, managing runtime environments, and databases.
 
-This repository is a collection of exercises and examples I created as part of the course. 
+This repository is a collection of exercises and examples I created while following the course.
