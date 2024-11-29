@@ -12,14 +12,18 @@ const Header = ({ text }) => (
 const StatisticLine = ({ text, value }) => {
   if (text === "Positive") {
     return (
-      <p>
-        {text} {value} %
-      </p>
+      <tr>
+        <td>{text}</td>
+        <td>{value}%</td>
+      </tr>
     );
   }
   return (
-    <p>{text} {value}</p>
-  )
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  );
 }
 
 const Statistics = ({ stats }) => {
@@ -27,12 +31,16 @@ const Statistics = ({ stats }) => {
     return (
       <>
         <Header text="Statistics" />
-        <StatisticLine text="Good" value={stats.good} />
-        <StatisticLine text="Neutral" value={stats.neutral} />
-        <StatisticLine text="Bad" value={stats.bad} />
-        <StatisticLine text="All" value={stats.all} />
-        <StatisticLine text="Average" value={stats.average} />
-        <StatisticLine text="Positive" value={stats.positivePercent} />
+        <table>
+          <tbody>
+            <StatisticLine text="Good" value={stats.good} />
+            <StatisticLine text="Neutral" value={stats.neutral} />
+            <StatisticLine text="Bad" value={stats.bad} />
+            <StatisticLine text="All" value={stats.all} />
+            <StatisticLine text="Average" value={stats.average} />
+            <StatisticLine text="Positive" value={stats.positivePercent} />
+          </tbody>
+        </table>
       </>
     );
   }
@@ -54,7 +62,7 @@ const App = () => {
   stats.neutral = neutral;
   stats.bad = bad;
   stats.all = all;
-  stats.average = all > 0 ? good - bad / all : 0;
+  stats.average = all > 0 ? (good - bad) / all : 0;
   stats.positivePercent = all > 0 ? good / all * 100 : 0;
 
   
