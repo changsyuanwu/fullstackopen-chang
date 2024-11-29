@@ -38,10 +38,7 @@ const App = () => {
     for (const [id, votes] of Object.entries(points)) {
       if (!Object.prototype.hasOwnProperty.call(points, mostVotedId) || votes >= points[mostVotedId])
         mostVotedId = id;
-      console.log(id, votes);
-      console.log(points);
     }
-    console.log(mostVotedId)
     return mostVotedId;
   };
 
