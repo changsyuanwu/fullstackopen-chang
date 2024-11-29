@@ -39,6 +39,8 @@ const App = () => {
     return emptyPoints;
   };
 
+  
+  
   const [points, setPoints] = useState(initialPointsObject());
   
   const [mostVotedId, setMostVotedId] = useState(0)
