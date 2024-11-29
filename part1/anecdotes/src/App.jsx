@@ -27,9 +27,21 @@ const App = () => {
     setSelected(getRandomAnecdote)
   }
 
+  const [points, setPoints] = useState({});
+
+  const curSelectedAnecdotePoints = Object.prototype.hasOwnProperty.call(points, selected) ? points[selected] : 0;
+
+  const voteForCurrentAnecdote = () => {
+    const copy = { ...points } 
+    copy[selected] = curSelectedAnecdotePoints + 1
+    setPoints(copy);
+  }
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <p>has {curSelectedAnecdotePoints} votes</p>
+      <Button handleClick={() => voteForCurrentAnecdote()} text="Vote" />
       <Button handleClick={() => selectRandomAnecdote()} text="Next anecdote" />
     </div>
   );
