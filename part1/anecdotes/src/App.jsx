@@ -31,8 +31,16 @@ const App = () => {
     setSelected(randomId)
   }
 
-  const [points, setPoints] = useState({});
+  const initialPointsObject = () => {
+    const emptyPoints = {};
+    anecdotes.forEach((a, idx) => {
+      emptyPoints[idx] = 0;
+    });
+    return emptyPoints;
+  };
 
+  const [points, setPoints] = useState(initialPointsObject());
+  
   const [mostVotedId, setMostVotedId] = useState(0)
 
   const curSelectedAnecdotePoints = Object.prototype.hasOwnProperty.call(points, selected) ? points[selected] : 0;
