@@ -9,17 +9,30 @@ const Header = ({ text }) => (
   <h1>{text}</h1>
 )
 
+const StatisticLine = ({ text, value }) => {
+  if (text === "Positive") {
+    return (
+      <p>
+        {text} {value} %
+      </p>
+    );
+  }
+  return (
+    <p>{text} {value}</p>
+  )
+}
+
 const Statistics = ({ stats }) => {
   if (stats.all > 0) {
     return (
       <>
         <Header text="Statistics" />
-        <p>Good {stats.good}</p>
-        <p>Neutral {stats.neutral}</p>
-        <p>Bad {stats.bad}</p>
-        <p>All {stats.all}</p>
-        <p>Average {stats.average}</p>
-        <p>Positive {stats.positivePercent}%</p>
+        <StatisticLine text="Good" value={stats.good} />
+        <StatisticLine text="Neutral" value={stats.neutral} />
+        <StatisticLine text="Bad" value={stats.bad} />
+        <StatisticLine text="All" value={stats.all} />
+        <StatisticLine text="Average" value={stats.average} />
+        <StatisticLine text="Positive" value={stats.positivePercent} />
       </>
     );
   }
