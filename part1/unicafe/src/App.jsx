@@ -10,17 +10,22 @@ const Header = ({ text }) => (
 )
 
 const Statistics = ({ stats }) => {
-  return (
-    <>
-      <Header text="Statistics" />
-      <p>Good {stats.good}</p>
-      <p>Neutral {stats.neutral}</p>
-      <p>Bad {stats.bad}</p>
-      <p>All {stats.all}</p>
-      <p>Average {stats.average}</p>
-      <p>Positive {stats.positivePercent}%</p>
-    </>
-  );
+  if (stats.all > 0) {
+    return (
+      <>
+        <Header text="Statistics" />
+        <p>Good {stats.good}</p>
+        <p>Neutral {stats.neutral}</p>
+        <p>Bad {stats.bad}</p>
+        <p>All {stats.all}</p>
+        <p>Average {stats.average}</p>
+        <p>Positive {stats.positivePercent}%</p>
+      </>
+    );
+  }
+  else {
+    return <p>No feedback given</p>
+  }
 }
 
 const App = () => {
