@@ -21,10 +21,14 @@ const App = () => {
     return Math.floor(Math.random() * anecdotes.length);
   };
 
-  const [selected, setSelected] = useState(getRandomAnecdote);
+  const [selected, setSelected] = useState(getRandomAnecdote());
 
   const selectRandomAnecdote = () => {
-    setSelected(getRandomAnecdote)
+    let randomId = getRandomAnecdote();
+    while (randomId === selected)
+      randomId = getRandomAnecdote();
+    console.log(randomId)
+    setSelected(randomId)
   }
 
   const [points, setPoints] = useState({});
