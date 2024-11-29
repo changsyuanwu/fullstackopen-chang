@@ -2,9 +2,27 @@ import './App.css'
 
 const Header = (props) => {
   return (
-    <div>
+    <>
       <h1>{props.course}</h1>
-    </div>
+    </>
+  );
+}
+
+const Content = (props) => {
+  return (
+    <>
+      <p>
+        {props.title} {props.numExercises}
+      </p>
+    </>
+  );
+}
+
+const Total = (props) => {
+  return (
+    <>
+      <p>Number of exercises {props.sumExercises}</p>
+    </>
   );
 }
 
@@ -20,18 +38,12 @@ const App = () => {
   return (
     <div>
       <Header course={course} />
-      <p>
-        {part1} {exercises1}
-      </p>
-      <p>
-        {part2} {exercises2}
-      </p>
-      <p>
-        {part3} {exercises3}
-      </p>
-      <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>
+      <Content title={part1} numExercises={exercises1} />
+      <Content title={part2} numExercises={exercises2} />
+      <Content title={part3} numExercises={exercises3} />
+      <Total sumExercises={exercises1 + exercises2 + exercises3} />
     </div>
-  )
+  );
 }
 
 export default App
