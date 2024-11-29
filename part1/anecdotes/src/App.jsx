@@ -29,20 +29,39 @@ const App = () => {
 
   const [points, setPoints] = useState({});
 
+  const [mostVotedId, setMostVotedId] = useState(0)
+
   const curSelectedAnecdotePoints = Object.prototype.hasOwnProperty.call(points, selected) ? points[selected] : 0;
+
+  const getMostVotedAnecdoteId = (points) => {
+    let mostVotedId = 0;
+    for (const [id, votes] of Object.entries(points)) {
+      if (!Object.prototype.hasOwnProperty.call(points, mostVotedId) || votes >= points[mostVotedId])
+        mostVotedId = id;
+      console.log(id, votes);
+      console.log(points);
+    }
+    console.log(mostVotedId)
+    return mostVotedId;
+  };
 
   const voteForCurrentAnecdote = () => {
     const copy = { ...points } 
     copy[selected] = curSelectedAnecdotePoints + 1
     setPoints(copy);
+    setMostVotedId(getMostVotedAnecdoteId(copy))
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {curSelectedAnecdotePoints} votes</p>
       <Button handleClick={() => voteForCurrentAnecdote()} text="Vote" />
       <Button handleClick={() => selectRandomAnecdote()} text="Next anecdote" />
+      <h1>Anecdote with the most votes</h1>
+      <p>{anecdotes[mostVotedId]}</p>
+      <p>has {points[mostVotedId]} votes</p>
     </div>
   );
 };
