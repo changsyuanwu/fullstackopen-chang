@@ -3,8 +3,8 @@ import { useState } from 'react'
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import PersonsList from './components/PersonsList.jsx';
-import axios from 'axios'
 import { useEffect } from 'react';
+import phonebookService from '../services/phonebook.js';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,9 +13,9 @@ const App = () => {
   const [filter, setFilter] = useState("")
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons")
-      .then(res => 
-      setPersons(res.data)
+    phonebookService.getAll()
+    .then(initialData => 
+      setPersons(initialData)
     )
   }, [])
 
@@ -33,9 +33,12 @@ const App = () => {
       number: newNumber
     };
 
-    setPersons(persons.concat(person));
-    setNewName("");
-    setNewNumber("")
+    phonebookService.create(person)
+      .then(retPerson => {
+        setPersons(persons.concat(retPerson));
+        setNewName("");
+        setNewNumber("")
+      })
   }
   
   const handleNameChange = (e) => {
