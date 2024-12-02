@@ -14,7 +14,7 @@ const App = () => {
       .then((res) => {
       setNotes(res.data)
     });
-  })
+  }, [])
 
   const addNote = (event) => {
     event.preventDefault()
