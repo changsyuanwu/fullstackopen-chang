@@ -18,6 +18,10 @@ const App = () => {
   const handleFilterChange = (e) => 
     setFilter(e.target.value)
 
+  const onShowButtonClicked = (c) => {
+    setFilter(c.name.common)
+  }
+
   const countriesThatMatchFilter =
     filter === ""
       ? countries
@@ -28,7 +32,7 @@ const App = () => {
   return (
     <div>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
-      <Content countries={countriesThatMatchFilter} />
+      <Content countries={countriesThatMatchFilter} onShowButtonClicked={onShowButtonClicked} />
     </div>
   );
 };

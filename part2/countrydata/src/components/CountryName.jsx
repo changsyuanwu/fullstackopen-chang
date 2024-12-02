@@ -1,7 +1,10 @@
-const CountryName = ({ country }) => {
+const CountryName = ({ country, onShowButtonClicked }) => {
   return (
     <>
-      <p>{country.name.common}</p>
+      <p>
+        {country.name.common}{" "}
+        <button onClick={() => onShowButtonClicked(country)}>show</button>
+      </p>
     </>
   );
 };
