@@ -40,6 +40,13 @@ const App = () => {
         setNewNumber("")
       })
   }
+
+  const deletePerson = (person) => {
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      phonebookService.deleteById(person.id)
+      .then(deletedPerson => setPersons(persons.filter(p => p.id !== deletedPerson.id)))
+    }
+  }
   
   const handleNameChange = (e) => {
     setNewName(e.target.value)
@@ -60,7 +67,7 @@ const App = () => {
       <h2>Add a new person</h2>
       <PersonForm addPerson={addPerson} handleNameChange={handleNameChange} newName={newName} handleNumberChange={handleNumberChange} newNumber={newNumber} />
       <h2>Numbers</h2>
-      <PersonsList peopleToDisplay={peopleToDisplay} />
+      <PersonsList peopleToDisplay={peopleToDisplay} onDeletePerson={ deletePerson} />
     </div>
   );
 };

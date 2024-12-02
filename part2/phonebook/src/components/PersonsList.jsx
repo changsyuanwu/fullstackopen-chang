@@ -1,10 +1,10 @@
 import PersonDetails from "./PersonDetails";
 
-const PersonsList = ({ peopleToDisplay }) => {
+const PersonsList = ({ peopleToDisplay, onDeletePerson }) => {
   return (
     <>
       {peopleToDisplay.map((person) => (
-        <PersonDetails key={person.name} person={person} />
+        <PersonDetails key={person.name} person={person} onDeletePerson={onDeletePerson}/>
       ))}
     </>
   );
