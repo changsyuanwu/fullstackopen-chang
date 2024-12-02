@@ -1,4 +1,14 @@
-const CountryDetails = ({ country }) => {
+import { useEffect, useState } from "react";
+import WeatherDetails from "./WeatherDetails";
+
+const CountryDetails = ({ country, getWeatherData }) => {
+  const [weatherDetails, setWeatherDetails] = useState(null)
+
+  useEffect(() => {
+    getWeatherData(country)
+      .then(weatherData => setWeatherDetails(weatherData));
+  }, []);
+
   return (
     <>
       <h2>{country.name.common}</h2>
@@ -13,6 +23,7 @@ const CountryDetails = ({ country }) => {
         ))}
       </ul>
       <img src={country.flags.png} />
+      {weatherDetails ? <WeatherDetails capital={country.capital} weatherData={weatherDetails} /> : <></>}
     </>
   );
 }

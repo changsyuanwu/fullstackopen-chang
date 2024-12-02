@@ -22,6 +22,9 @@ const App = () => {
     setFilter(c.name.common)
   }
 
+  const getWeatherData = (c) => 
+    countriesServices.getWeatherData(c)
+
   const countriesThatMatchFilter =
     filter === ""
       ? countries
@@ -32,7 +35,11 @@ const App = () => {
   return (
     <div>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
-      <Content countries={countriesThatMatchFilter} onShowButtonClicked={onShowButtonClicked} />
+      <Content
+        countries={countriesThatMatchFilter}
+        onShowButtonClicked={onShowButtonClicked}
+        getWeatherData={getWeatherData}
+      />
     </div>
   );
 };
