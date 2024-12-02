@@ -5,12 +5,14 @@ import PersonForm from './components/PersonForm';
 import PersonsList from './components/PersonsList.jsx';
 import { useEffect } from 'react';
 import phonebookService from '../services/phonebook.js';
+import Notification from './components/Notification.jsx';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("")
   const [filter, setFilter] = useState("")
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     phonebookService.getAll()
@@ -34,15 +36,23 @@ const App = () => {
         phonebookService.update(existingPerson.id, person)
           .then(updatedPerson => setPersons(persons.map(p => p.id !== updatedPerson.id ? p : updatedPerson)))
       }
-      return;
+      setNotificationMessage(`Updated ${person.name}`)
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 3000);
     }
-
-    phonebookService.create(person)
+    else {
+      phonebookService.create(person)
       .then(retPerson => {
         setPersons(persons.concat(retPerson));
         setNewName("");
         setNewNumber("")
       })
+      setNotificationMessage(`Added ${person.name}`)
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 3000);
+    }
   }
 
   const deletePerson = (person) => {
@@ -67,6 +77,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notificationMessage}/>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add a new person</h2>
       <PersonForm addPerson={addPerson} handleNameChange={handleNameChange} newName={newName} handleNumberChange={handleNumberChange} newNumber={newNumber} />
