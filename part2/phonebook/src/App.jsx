@@ -33,10 +33,31 @@ const App = () => {
     const existingPerson = persons.find((p) => p.name === newName);
     if (existingPerson) {
       if (window.confirm(`${person.name} is already added to the phonebook, replace the old number with a new one?`)) {
-        phonebookService.update(existingPerson.id, person)
-          .then(updatedPerson => setPersons(persons.map(p => p.id !== updatedPerson.id ? p : updatedPerson)))
+        phonebookService
+          .update(existingPerson.id, person)
+          .then((updatedPerson) =>
+            setPersons(
+              persons.map((p) =>
+                p.id !== updatedPerson.id ? p : updatedPerson
+              )
+            )
+          )
+          .catch((error) => {
+            setNotificationMessage({
+              status: "error",
+              message: `Failed to update ${person.name}, their information is no longer on the server.`,
+            });
+            setPersons(persons.filter(p => p.id !== existingPerson.id))
+            setTimeout(() => {
+              setNotificationMessage(null);
+            }, 3000);
+            return
+          });
       }
-      setNotificationMessage(`Updated ${person.name}`)
+      setNotificationMessage({
+        status: "success",
+        message: `Updated ${person.name}`,
+      });
       setTimeout(() => {
         setNotificationMessage(null);
       }, 3000);
@@ -48,7 +69,10 @@ const App = () => {
         setNewName("");
         setNewNumber("")
       })
-      setNotificationMessage(`Added ${person.name}`)
+      setNotificationMessage({
+        status: "success",
+        message: `Added ${person.name}`
+      })
       setTimeout(() => {
         setNotificationMessage(null);
       }, 3000);
