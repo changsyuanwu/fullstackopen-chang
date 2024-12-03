@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
 
-const username = process.env.MONGODB_ATLAS_USERNAME;
-const password = process.env.MONGODB_ATLAS_PASSWORD;
-const mongoAtlasClusterLoc = process.env.MONGODB_ATLAS_CLUSTER_LOCATION;
-
-const url = `mongodb+srv://${username}:${password}@${mongoAtlasClusterLoc}/noteApp?retryWrites=true&w=majority&appName=Cluster0`;
-
 mongoose.set("strictQuery", false);
 
-mongoose.connect(url);
+const url = process.env.MONGODB_ATLAS_URL;
+console.log("connecting to", url);
+
+mongoose.connect(url)
+  .then(res => {
+    console.log("connected to MongoDB");
+  })
+  .catch(err => {
+    console.log("error connecting to MongoDB", err.message)
+  })
 
 const noteSchema = new mongoose.Schema({
   content: String,

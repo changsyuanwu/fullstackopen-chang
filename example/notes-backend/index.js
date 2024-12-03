@@ -1,15 +1,18 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const Note = require("./models/note")
+
 const app = express();
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
 app.use(express.json());
 app.use(express.static("dist"));
-app.use(cors())
+app.use(cors());
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
@@ -19,7 +22,7 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
-app.use(requestLogger)
+app.use(requestLogger);
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
@@ -48,7 +51,9 @@ app.get("/", (request, response) => {
 });
 
 app.get("/api/notes", (request, response) => {
-  response.json(notes);
+  Note.find({}).then(notes => {
+    response.json(notes);
+  });
 });
 
 const generateId = () => {
