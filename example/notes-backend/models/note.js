@@ -1,3 +1,5 @@
+const path = require("path");
+require("@dotenvx/dotenvx").config({ path: path.resolve(__dirname, "../.env") });
 const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", false);
@@ -27,4 +29,4 @@ noteSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Note", noteSchema)
+module.exports = mongoose.model("Note", noteSchema);

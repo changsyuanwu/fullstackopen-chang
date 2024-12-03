@@ -15,8 +15,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.26.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.6",
     "express": "^4.21.1",
     "mongoose": "^8.8.3"
   },

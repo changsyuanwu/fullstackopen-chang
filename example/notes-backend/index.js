@@ -1,7 +1,7 @@
-require("dotenv").config();
+require("@dotenvx/dotenvx").config();
 const express = require("express");
 const cors = require("cors");
-const Note = require("./models/note")
+const Note = require("./models/note");
 
 const app = express();
 
@@ -51,16 +51,10 @@ app.get("/", (request, response) => {
 });
 
 app.get("/api/notes", (request, response) => {
-  Note.find({}).then(notes => {
+  Note.find({}).then((notes) => {
     response.json(notes);
   });
 });
-
-const generateId = () => {
-  const maxId =
-    notes.length > 0 ? Math.max(...notes.map((n) => Number(n.id))) : 0;
-  return String(maxId + 1);
-};
 
 app.post("/api/notes", (request, response) => {
   const body = request.body;
@@ -76,19 +70,21 @@ app.post("/api/notes", (request, response) => {
     important: Boolean(body.important) || false,
   });
 
-  note.save().then(savedNote => {
-    response.json(savedNote)
-  })
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 app.get("/api/notes/:id", (request, response) => {
   const id = request.params.id;
-  const note = notes.find((note) => note.id === id);
-  if (note) {
-    response.json(note);
-  } else {
-    response.status(404).end();
-  }
+  Note.findById(id)
+    .then((note) => {
+      response.json(note);
+    })
+    .catch((err) => {
+      response.status(404).end();
+      console.log(err);
+    });
 });
 
 app.delete("/api/notes/:id", (request, response) => {

@@ -1,0 +1,4 @@
+GET https://fullstackopen-example-chang.fly.dev/api/notes/674ef97ce65843f4e52017ca
+
+###
+GET http://localhost:3002/api/notes/674ef97ce65843f4e52017ca
