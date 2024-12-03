@@ -2,11 +2,7 @@ const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", false);
 
-const username = process.env.MONGODB_ATLAS_USERNAME;
-const password = process.env.MONGODB_ATLAS_PASSWORD;
-const mongoAtlasClusterLoc = process.env.MONGODB_ATLAS_CLUSTER_LOCATION;
-
-const url = `mongodb+srv://${username}:${password}@${mongoAtlasClusterLoc}/noteApp?retryWrites=true&w=majority&appName=Cluster0`;
+const url = process.env.MONGODB_ATLAS_URL;
 console.log("connecting to", url);
 
 mongoose

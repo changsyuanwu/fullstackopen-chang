@@ -8,3 +8,12 @@ content-type: application/json
     "name": "sample",
     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
 }
+
+###
+POST https://fullstackopen-example-chang.fly.dev/api/notes/ HTTP/1.1
+content-type: application/json
+
+{
+    "content": "test unimportant note",
+    "important": "false"
+}

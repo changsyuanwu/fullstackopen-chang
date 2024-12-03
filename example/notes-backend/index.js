@@ -71,15 +71,14 @@ app.post("/api/notes", (request, response) => {
     });
   }
 
-  const note = {
+  const note = new Note({
     content: body.content,
     important: Boolean(body.important) || false,
-    id: generateId(),
-  };
+  });
 
-  notes = notes.concat(note);
-
-  response.json(note);
+  note.save().then(savedNote => {
+    response.json(savedNote)
+  })
 });
 
 app.get("/api/notes/:id", (request, response) => {
