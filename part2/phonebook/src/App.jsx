@@ -4,7 +4,7 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import PersonsList from './components/PersonsList.jsx';
 import { useEffect } from 'react';
-import phonebookService from '../services/phonebook.js';
+import phonebookService from './services/phonebook.js';
 import Notification from './components/Notification.jsx';
 
 const App = () => {
