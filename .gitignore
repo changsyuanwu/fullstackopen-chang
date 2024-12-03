@@ -2,4 +2,3 @@
 
 node_modules
 *.env
-example/notes-backend/.env
