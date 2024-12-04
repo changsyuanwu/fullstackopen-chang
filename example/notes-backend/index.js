@@ -10,10 +10,6 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-app.use(express.json());
-app.use(express.static("dist"));
-app.use(cors());
-
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
   console.log("Path:  ", request.path);
@@ -22,11 +18,10 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
+app.use(express.json());
+app.use(express.static("dist"));
+app.use(cors());
 app.use(requestLogger);
-
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" });
-};
 
 let notes = [
   {
@@ -75,16 +70,16 @@ app.post("/api/notes", (request, response) => {
   });
 });
 
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
   const id = request.params.id;
   Note.findById(id)
     .then((note) => {
-      response.json(note);
+      if (note)
+        response.json(note);
+      else 
+        response.status(404).end();
     })
-    .catch((err) => {
-      response.status(404).end();
-      console.log(err);
-    });
+    .catch(err => next(err));
 });
 
 app.delete("/api/notes/:id", (request, response) => {
@@ -94,4 +89,20 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(204).end();
 });
 
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
 app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+// this has to be the last loaded middleware, also all the routes should be registered before this!
+app.use(errorHandler);
