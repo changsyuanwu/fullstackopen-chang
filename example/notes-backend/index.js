@@ -18,28 +18,12 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
-app.use(express.json());
 app.use(express.static("dist"));
+app.use(express.json());
 app.use(cors());
 app.use(requestLogger);
 
-let notes = [
-  {
-    id: "1",
-    content: "HTML is easy",
-    important: true,
-  },
-  {
-    id: "2",
-    content: "Browser can execute only JavaScript",
-    important: false,
-  },
-  {
-    id: "3",
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true,
-  },
-];
+let notes = [];
 
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
@@ -84,11 +68,30 @@ app.get("/api/notes/:id", (request, response, next) => {
 
 app.delete("/api/notes/:id", (request, response) => {
   const id = request.params.id;
-  notes = notes.filter((note) => note.id !== id);
-
-  response.status(204).end();
+  Note.findByIdAndDelete(id)
+    .then(result => {
+      if (result) 
+        response.status(200).json(result);
+      else  
+        response.status(204).end();
+    })
+    .catch(err => next(err))
 });
 
+app.put("/api/notes/:id", (request, response, next) => {
+  const body = request.body;
+
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then((updatedNote) => {
+      response.json(updatedNote);
+    })
+    .catch((error) => next(error));
+});
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
