@@ -29,13 +29,15 @@ app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
 });
 
-app.get("/api/notes", (request, response) => {
-  Note.find({}).then((notes) => {
-    response.json(notes);
-  });
+app.get("/api/notes", (request, response, next) => {
+  Note.find({})
+    .then((notes) => {
+      response.json(notes);
+    })
+    .catch((err) => next(err));
 });
 
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
   const body = request.body;
 
   if (!body.content) {
@@ -49,9 +51,12 @@ app.post("/api/notes", (request, response) => {
     important: Boolean(body.important) || false,
   });
 
-  note.save().then((savedNote) => {
-    response.json(savedNote);
-  });
+  note
+    .save()
+    .then((savedNote) => {
+      response.json(savedNote);
+    })
+    .catch((err) => next(err));
 });
 
 app.get("/api/notes/:id", (request, response, next) => {
@@ -66,7 +71,7 @@ app.get("/api/notes/:id", (request, response, next) => {
     .catch(err => next(err));
 });
 
-app.delete("/api/notes/:id", (request, response) => {
+app.delete("/api/notes/:id", (request, response, next) => {
   const id = request.params.id;
   Note.findByIdAndDelete(id)
     .then(result => {
@@ -86,7 +91,15 @@ app.put("/api/notes/:id", (request, response, next) => {
     important: body.important,
   };
 
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  Note.findByIdAndUpdate(
+    request.params.id,
+    note,
+    {
+      new: true,
+      runValidators: true,
+      context: 'query'
+    }
+  )
     .then((updatedNote) => {
       response.json(updatedNote);
     })
@@ -103,6 +116,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  }
+  else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
