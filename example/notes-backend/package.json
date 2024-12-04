@@ -5,14 +5,14 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rm -rf dist && cd ../notes-frontend/ && npm run build && cp -r dist ../notes-backend",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
     "logs:prod": "fly logs",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "node --test"
   },
-  "author": "",
+  "author": "changsyuanwu",
   "license": "ISC",
   "description": "",
   "dependencies": {
@@ -22,7 +22,6 @@
     "mongoose": "^8.8.3"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin-js": "^9.16.0",
     "@flydotio/dockerfile": "^0.5.9",
     "@stylistic/eslint-plugin-js": "^2.11.0",
     "eslint": "^9.16.0",
