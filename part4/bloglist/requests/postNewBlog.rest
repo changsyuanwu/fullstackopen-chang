@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-  "title": "Happy Potter",
-  "author": "JK Rowling",
-  "url": "google.ca",
-  "likes": "66"
+  "title": "Hug",
+  "author": "Happy Hugger",
+  "url": "google.com",
+  "likes": "0"
 }
