@@ -64,15 +64,22 @@ const App = () => {
     }
     else {
       phonebookService.create(person)
-      .then(retPerson => {
-        setPersons(persons.concat(retPerson));
-        setNewName("");
-        setNewNumber("")
-      })
-      setNotificationMessage({
-        status: "success",
-        message: `Added ${person.name}`
-      })
+        .then(retPerson => {
+          setPersons(persons.concat(retPerson));
+          setNewName("");
+          setNewNumber("")
+          setNotificationMessage({
+            status: "success",
+            message: `Added ${person.name}`,
+          });
+        })
+        .catch(err => {
+          setNotificationMessage({
+            status: "error",
+            message: `${err.response.data.error}`,
+          });
+          console.log(err.response.data.error);
+        })
       setTimeout(() => {
         setNotificationMessage(null);
       }, 3000);
