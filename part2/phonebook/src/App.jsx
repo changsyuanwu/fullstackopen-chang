@@ -42,12 +42,11 @@ const App = () => {
               )
             )
           )
-          .catch((error) => {
+          .catch(err => {
             setNotificationMessage({
               status: "error",
-              message: `Failed to update ${person.name}, their information is no longer on the server.`,
+              message: `${err.response.data.error}`,
             });
-            setPersons(persons.filter(p => p.id !== existingPerson.id))
             setTimeout(() => {
               setNotificationMessage(null);
             }, 3000);
