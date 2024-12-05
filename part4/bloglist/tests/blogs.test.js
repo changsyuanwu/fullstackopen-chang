@@ -56,6 +56,26 @@ describe("test blog api", () => {
     const titles = blogsAfterPost.map(b => b.title)
     assert(titles.includes("Travel Guide to Japan"));
   });
+
+  test("new blogs default to 0 likes if not specified", async () => {
+    const newBlog = {
+      title: "Unpopular Blog",
+      author: "Sad Author",
+      url: "https://sadanduseless.com",
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const blogsAfterPost = await helper.blogsInDb();
+    assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length + 1);
+
+    const savedBlog = blogsAfterPost.find(b => b.title === newBlog.title && b.author === newBlog.author && b.url === newBlog.url)
+    assert.strictEqual(savedBlog.likes, 0);
+  });
 });
 
 test("dummy returns one", () => {
