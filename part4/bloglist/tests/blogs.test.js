@@ -1,6 +1,25 @@
-const { test, describe } = require("node:test");
+const {
+  test,
+  describe,
+  beforeEach,
+  after
+} = require("node:test");
 const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
+const supertest = require("supertest")
+const app = require("../app");
+const mongoose = require("mongoose");
+
+const api = supertest(app);
+
+describe("test blog api", () => {
+  test("blogs are returned as json", async () => {
+    await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+  });
+});
 
 test("dummy returns one", () => {
   const blogs = [];
@@ -307,4 +326,8 @@ describe("most liked", () => {
     };
     assert.deepStrictEqual(listHelper.mostLiked(bigListOfBlogs), expectedResult);
   })
+});
+
+after(async () => {
+  await mongoose.connection.close();
 });
