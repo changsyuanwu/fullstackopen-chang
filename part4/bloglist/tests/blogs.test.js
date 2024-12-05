@@ -76,6 +76,32 @@ describe("test blog api", () => {
     const savedBlog = blogsAfterPost.find(b => b.title === newBlog.title && b.author === newBlog.author && b.url === newBlog.url)
     assert.strictEqual(savedBlog.likes, 0);
   });
+
+  test("notes without a title or url are not added", async () => {
+    const blogWithNoTitle = {
+      author: "Sad Author",
+      url: "https://sadanduseless.com",
+      likes: 1
+    };
+
+    const blogWithNoUrl = {
+      title: "no url",
+      author: "not me",
+    }
+
+    await api
+      .post("/api/blogs")
+      .send(blogWithNoUrl)
+      .expect(400);
+    
+    await api
+      .post("/api/blogs")
+      .send(blogWithNoTitle)
+      .expect(400);
+
+    const blogsAfterPost = await helper.blogsInDb();
+    assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length);
+  });
 });
 
 test("dummy returns one", () => {
