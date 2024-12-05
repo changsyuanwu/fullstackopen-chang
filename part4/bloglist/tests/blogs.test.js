@@ -9,8 +9,18 @@ const listHelper = require("../utils/list_helper");
 const supertest = require("supertest")
 const app = require("../app");
 const mongoose = require("mongoose");
+const helper = require("./test_helper")
+const Blog = require("../models/blog")
 
 const api = supertest(app);
+
+beforeEach(async () => {
+  await Blog.deleteMany({});
+
+  const blogObjects = helper.initialBlogs.map(b => new Blog(b));
+  const promiseAry = blogObjects.map(b => b.save())
+  await Promise.all(promiseAry)
+});
 
 describe("test blog api", () => {
   test("blogs are returned as json", async () => {
@@ -18,6 +28,12 @@ describe("test blog api", () => {
       .get("/api/blogs")
       .expect(200)
       .expect("Content-Type", /application\/json/);
+  });
+
+  test("blog posts have an unique id property", async () => {
+    const blogs = await helper.blogsInDb();
+    assert.strictEqual(blogs[0].hasOwnProperty("id"), true);
+    assert.strictEqual(blogs[0].hasOwnProperty("_id"), false);
   });
 });
 
