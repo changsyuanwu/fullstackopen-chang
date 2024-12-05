@@ -18,24 +18,20 @@ notesRouter.post("/", async (request, response) => {
   response.status(201).json(savedNote);
 });
 
-notesRouter.get("/:id", (request, response, next) => {
+notesRouter.get("/:id", async (request, response) => {
   const id = request.params.id;
-  Note.findById(id)
-    .then((note) => {
-      if (note) response.json(note);
-      else response.status(404).end();
-    })
-    .catch((err) => next(err));
+  const note = await Note.findById(id);
+  if (note)
+    response.json(note);
+  else
+    response.status(404).end();
 });
 
-notesRouter.delete("/:id", (request, response, next) => {
+notesRouter.delete("/:id", async (request, response) => {
   const id = request.params.id;
-  Note.findByIdAndDelete(id)
-    .then((result) => {
-      if (result) response.status(200).json(result);
-      else response.status(204).end();
-    })
-    .catch((err) => next(err));
+  const deletedNote = await Note.findByIdAndDelete(id);
+  if (deletedNote) response.status(200).json(deletedNote); // makes more sense to me to give a 200 and return the deleted note
+  else response.status(204).end();
 });
 
 notesRouter.put("/:id", (request, response, next) => {
