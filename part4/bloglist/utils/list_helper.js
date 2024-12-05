@@ -1,4 +1,13 @@
-const Blog = require("../models/blog");
+const _ = require("lodash");
+
+/*
+const blogSchema = new mongoose.Schema({
+  title: String,
+  author: String,
+  url: String,
+  likes: Number,
+});
+*/
 
 const dummy = (blogs) => {
   return 1;
@@ -17,8 +26,16 @@ const favoriteBlog = (blogs) => {
   );
 }
 
+const mostBlogs = (blogs) => {
+  return _.head(_(blogs)
+    .countBy("author")
+    .entries()
+    .maxBy(_.last));
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
