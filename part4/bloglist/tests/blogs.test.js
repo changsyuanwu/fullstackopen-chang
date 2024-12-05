@@ -32,8 +32,29 @@ describe("test blog api", () => {
 
   test("blog posts have an unique id property", async () => {
     const blogs = await helper.blogsInDb();
-    assert.strictEqual(blogs[0].hasOwnProperty("id"), true);
-    assert.strictEqual(blogs[0].hasOwnProperty("_id"), false);
+    assert(blogs[0].hasOwnProperty("id"));
+    assert(!blogs[0].hasOwnProperty("_id"));
+  });
+
+  test("new blogs are created successfully", async () => {
+    const newBlog = {
+      title: "Travel Guide to Japan",
+      author: "Fujitama Matsuda",
+      url: "https://google.ca",
+      likes: 66,
+    };
+    
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+    
+    const blogsAfterPost = await helper.blogsInDb();
+    assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length + 1);
+
+    const titles = blogsAfterPost.map(b => b.title)
+    assert(titles.includes("Travel Guide to Japan"));
   });
 });
 
