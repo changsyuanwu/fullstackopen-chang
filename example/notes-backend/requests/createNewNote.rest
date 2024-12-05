@@ -1,15 +1,14 @@
 GET http://localhost:3002/api/notes/
 
-###
+### bad
 POST http://localhost:3002/api/notes/ HTTP/1.1
 content-type: application/json
 
 {
-    "content": "HTML is easy",
     "important": "false"
 }
 
-### goo
+### good
 POST https://fullstackopen-example-chang.fly.dev/api/notes/ HTTP/1.1
 content-type: application/json
 
