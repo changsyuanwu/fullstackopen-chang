@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
+const config = require("./utils/config");
 
 mongoose.set("strictQuery", false);
 
-const url = process.env.MONGODB_ATLAS_URL;
+const url = config.MONGODB_URI;
 console.log("connecting to", url);
 
 mongoose.connect(url)
@@ -25,15 +26,15 @@ const note = new Note({
   important: true,
 });
 
-// note.save().then((result) => {
-//   console.log("note saved!");
-//   console.log(result)
-//   mongoose.connection.close();
-// });
-
-Note.find({}).then(res => {
-  res.forEach(note => {
-    console.log(note);
-  });
+note.save().then((result) => {
+  console.log("note saved!");
+  console.log(result);
   mongoose.connection.close();
 });
+
+// Note.find({}).then(res => {
+//   res.forEach(note => {
+//     console.log(note);
+//   });
+//   mongoose.connection.close();
+// });
