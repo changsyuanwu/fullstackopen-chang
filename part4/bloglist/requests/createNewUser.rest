@@ -2,9 +2,9 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-  "username": "root2",
+  "username": "root5",
   "name": "root",
-  "password": "wow password2"
+  "password": "wow password5"
 }
 
 ### Now an invalid user
