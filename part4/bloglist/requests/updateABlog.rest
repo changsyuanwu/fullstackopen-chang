@@ -1,7 +1,7 @@
 GET http://localhost:3003/api/blogs
 
 ###
-PUT http://localhost:3003/api/blogs/674ffda243521a7503e1343f
+PUT http://localhost:3003/api/blogs/674ffda243521a75
 content-type: application/json
 
 {
