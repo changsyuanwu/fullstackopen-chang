@@ -138,6 +138,26 @@ describe("when there are some initial blogs", () => {
     });
 
   });
+
+  describe("updating blogs", () => {
+    test("with valid id should succeed", async () => {
+      const startingBlogs = await helper.blogsInDb();
+      const blogToUpdate = startingBlogs[0];
+
+      blogToUpdate.likes = 8888;
+
+      const response = await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(blogToUpdate)
+        .expect(200)
+        .expect("Content-Type", /application\/json/);
+      const updatedBlog = response.body
+      assert.deepStrictEqual(blogToUpdate, updatedBlog)
+
+      const blogsAfterUpdate = await helper.blogsInDb();
+      assert.deepStrictEqual(blogToUpdate, blogsAfterUpdate.find(b => b.id === blogToUpdate.id));
+    });
+  });
 });
 
 test("dummy returns one", () => {

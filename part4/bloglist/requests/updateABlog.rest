@@ -1,0 +1,12 @@
+GET http://localhost:3003/api/blogs
+
+###
+PUT http://localhost:3003/api/blogs/674ffda243521a7503e1343f
+content-type: application/json
+
+{
+  "title": "Huggy",
+  "author": "Happy Hugger",
+  "url": "google.com",
+  "likes": "90"
+}
