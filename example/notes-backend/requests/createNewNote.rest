@@ -11,6 +11,7 @@ content-type: application/json
 ### good
 POST http://localhost:3002/api/notes/ HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJpZCI6IjY3NTI2ZmQzOTRiNTAxNGI4OGNlOGFmMCIsImlhdCI6MTczMzQ2ODU0N30.kIB9xq85s667C18_1-wMIGuvkqRzZa7HCHo-v8HILFs
 
 {
     "content": "test unimportant note",
