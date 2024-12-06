@@ -9,10 +9,11 @@ content-type: application/json
 }
 
 ### good
-POST https://fullstackopen-example-chang.fly.dev/api/notes/ HTTP/1.1
+POST http://localhost:3002/api/notes/ HTTP/1.1
 content-type: application/json
 
 {
     "content": "test unimportant note",
-    "important": "false"
+    "important": "true",
+    "userId": "67526fd394b5014b88ce8af0"
 }
