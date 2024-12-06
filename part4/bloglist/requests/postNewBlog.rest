@@ -3,7 +3,7 @@ content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY3NTJiYzg4OWQyYWJjZTc0NzM3MmZjOSIsImlhdCI6MTczMzQ5MjQwMywiZXhwIjoxNzMzNDk2MDAzfQ.c9unsEl5p5w08dEzag10EVDijltgdPjkWUBcDHYBPKk
 
 {
-  "title": "Hug",
+  "title": "Huguuu",
   "author": "Haooppy Hugger",
   "url": "google.com",
   "likes": "0"
