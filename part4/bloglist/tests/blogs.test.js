@@ -22,12 +22,19 @@ beforeEach(async () => {
   await Promise.all(promiseAry)
 });
 
-describe("test blog api", () => {
+describe("when there are some initial blogs", () => {
   test("blogs are returned as json", async () => {
     await api
       .get("/api/blogs")
       .expect(200)
       .expect("Content-Type", /application\/json/);
+  });
+
+  test("all inserted blogs are returned", async () => {
+    const response = await api
+      .get("/api/blogs")
+
+    assert.strictEqual(response.body.length, helper.initialBlogs.length)
   });
 
   test("blog posts have an unique id property", async () => {
@@ -36,71 +43,100 @@ describe("test blog api", () => {
     assert(!blogs[0].hasOwnProperty("_id"));
   });
 
-  test("new blogs are created successfully", async () => {
-    const newBlog = {
-      title: "Travel Guide to Japan",
-      author: "Fujitama Matsuda",
-      url: "https://google.ca",
-      likes: 66,
-    };
-    
-    await api
-      .post("/api/blogs")
-      .send(newBlog)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
-    
-    const blogsAfterPost = await helper.blogsInDb();
-    assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length + 1);
+  describe("addition of blogs", () => {
 
-    const titles = blogsAfterPost.map(b => b.title)
-    assert(titles.includes("Travel Guide to Japan"));
+    test("new blogs are created successfully", async () => {
+      const newBlog = {
+        title: "Travel Guide to Japan",
+        author: "Fujitama Matsuda",
+        url: "https://google.ca",
+        likes: 66,
+      };
+
+      await api
+        .post("/api/blogs")
+        .send(newBlog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+      const blogsAfterPost = await helper.blogsInDb();
+      assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length + 1);
+
+      const titles = blogsAfterPost.map((b) => b.title);
+      assert(titles.includes("Travel Guide to Japan"));
+    });
+
+    test("new blogs default to 0 likes if not specified", async () => {
+      const newBlog = {
+        title: "Unpopular Blog",
+        author: "Sad Author",
+        url: "https://sadanduseless.com",
+      };
+
+      await api
+        .post("/api/blogs")
+        .send(newBlog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+      const blogsAfterPost = await helper.blogsInDb();
+      assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length + 1);
+
+      const savedBlog = blogsAfterPost.find(
+        (b) =>
+          b.title === newBlog.title &&
+          b.author === newBlog.author &&
+          b.url === newBlog.url
+      );
+      assert.strictEqual(savedBlog.likes, 0);
+    });
+
+    test("notes without a title or url are not added", async () => {
+      const blogWithNoTitle = {
+        author: "Sad Author",
+        url: "https://sadanduseless.com",
+        likes: 1,
+      };
+
+      const blogWithNoUrl = {
+        title: "no url",
+        author: "not me",
+      };
+
+      await api.post("/api/blogs").send(blogWithNoUrl).expect(400);
+
+      await api.post("/api/blogs").send(blogWithNoTitle).expect(400);
+
+      const blogsAfterPost = await helper.blogsInDb();
+      assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length);
+    });
   });
 
-  test("new blogs default to 0 likes if not specified", async () => {
-    const newBlog = {
-      title: "Unpopular Blog",
-      author: "Sad Author",
-      url: "https://sadanduseless.com",
-    };
+  describe("deletion of blogs", () => {
+    test("deletion with valid id should succeed", async () => {
+      const blogsAtStart = await helper.blogsInDb();
+      const blogToDelete = blogsAtStart[0];
 
-    await api
-      .post("/api/blogs")
-      .send(newBlog)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
+      const response = await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/);
+      assert.deepStrictEqual(blogToDelete, response.body);
 
-    const blogsAfterPost = await helper.blogsInDb();
-    assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length + 1);
+      const blogsAtEnd = await helper.blogsInDb();
 
-    const savedBlog = blogsAfterPost.find(b => b.title === newBlog.title && b.author === newBlog.author && b.url === newBlog.url)
-    assert.strictEqual(savedBlog.likes, 0);
-  });
+      const titlesAndUrls = blogsAtEnd.map(b => `${b.title} at ${b.url}`);
+      assert(!titlesAndUrls.includes(`${blogToDelete.title} at ${blogToDelete.url}`))
 
-  test("notes without a title or url are not added", async () => {
-    const blogWithNoTitle = {
-      author: "Sad Author",
-      url: "https://sadanduseless.com",
-      likes: 1
-    };
+      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1);
+    });
 
-    const blogWithNoUrl = {
-      title: "no url",
-      author: "not me",
-    }
+    test("fails with 400 when id is invalid", async () => {
+      const invalidId = "581a82a3445";
 
-    await api
-      .post("/api/blogs")
-      .send(blogWithNoUrl)
-      .expect(400);
-    
-    await api
-      .post("/api/blogs")
-      .send(blogWithNoTitle)
-      .expect(400);
+      await api.delete(`/api/blogs/${invalidId}`).expect(400);
+    });
 
-    const blogsAfterPost = await helper.blogsInDb();
-    assert.strictEqual(blogsAfterPost.length, helper.initialBlogs.length);
   });
 });
 
