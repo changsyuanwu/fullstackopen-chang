@@ -3,7 +3,7 @@ content-type: application/json
 
 {
   "title": "Hug",
-  "author": "Happy Hugger",
+  "author": "Haooppy Hugger",
   "url": "google.com",
   "likes": "0"
 }
