@@ -6,11 +6,11 @@ const {
 } = require("node:test");
 const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
-const supertest = require("supertest")
+const supertest = require("supertest");
 const app = require("../app");
 const mongoose = require("mongoose");
-const helper = require("./blog_test_helper")
-const Blog = require("../models/blog")
+const helper = require("./blog_test_helper");
+const Blog = require("../models/blog");
 
 const api = supertest(app);
 
@@ -18,8 +18,8 @@ beforeEach(async () => {
   await Blog.deleteMany({});
 
   const blogObjects = helper.initialBlogs.map(b => new Blog(b));
-  const promiseAry = blogObjects.map(b => b.save())
-  await Promise.all(promiseAry)
+  const promiseAry = blogObjects.map(b => b.save());
+  await Promise.all(promiseAry);
 });
 
 describe("when there are some initial blogs", () => {
@@ -32,15 +32,16 @@ describe("when there are some initial blogs", () => {
 
   test("all inserted blogs are returned", async () => {
     const response = await api
-      .get("/api/blogs")
+      .get("/api/blogs");
 
-    assert.strictEqual(response.body.length, helper.initialBlogs.length)
+    assert.strictEqual(response.body.length, helper.initialBlogs.length);
   });
 
   test("blog posts have an unique id property", async () => {
     const blogs = await helper.blogsInDb();
-    assert(blogs[0].hasOwnProperty("id"));
-    assert(!blogs[0].hasOwnProperty("_id"));
+    Object.hasOwnProperty();
+    assert(Object.prototype.hasOwnProperty.call(blogs[0], "id"));
+    assert(!Object.prototype.hasOwnProperty.call(blogs[0], "_id"));
   });
 
   describe("addition of blogs", () => {
@@ -126,7 +127,7 @@ describe("when there are some initial blogs", () => {
       const blogsAtEnd = await helper.blogsInDb();
 
       const titlesAndUrls = blogsAtEnd.map(b => `${b.title} at ${b.url}`);
-      assert(!titlesAndUrls.includes(`${blogToDelete.title} at ${blogToDelete.url}`))
+      assert(!titlesAndUrls.includes(`${blogToDelete.title} at ${blogToDelete.url}`));
 
       assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1);
     });
@@ -151,8 +152,8 @@ describe("when there are some initial blogs", () => {
         .send(blogToUpdate)
         .expect(200)
         .expect("Content-Type", /application\/json/);
-      const updatedBlog = response.body
-      assert.deepStrictEqual(blogToUpdate, updatedBlog)
+      const updatedBlog = response.body;
+      assert.deepStrictEqual(blogToUpdate, updatedBlog);
 
       const blogsAfterUpdate = await helper.blogsInDb();
       assert.deepStrictEqual(blogToUpdate, blogsAfterUpdate.find(b => b.id === blogToUpdate.id));
@@ -231,16 +232,16 @@ describe("total likes", () => {
   ];
 
   test("of empty list is zero", () => {
-    assert.strictEqual(listHelper.totalLikes(emptyList), 0)
-  })
+    assert.strictEqual(listHelper.totalLikes(emptyList), 0);
+  });
 
   test("when list has only one blog, equals the likes of that", () => {
     assert.strictEqual(listHelper.totalLikes(listWithOneBlog), 5);
   });
 
   test("of a bigger list is calculated correctly", () => {
-    assert.strictEqual(listHelper.totalLikes(bigListOfBlogs), 36)
-  })
+    assert.strictEqual(listHelper.totalLikes(bigListOfBlogs), 36);
+  });
 });
 
 describe("favourite blog", () => {
@@ -303,8 +304,8 @@ describe("favourite blog", () => {
   ];
 
   test("out of one blog is just that blog", () => {
-    assert.deepStrictEqual(listHelper.favoriteBlog(oneBlog), oneBlog[0])
-  })
+    assert.deepStrictEqual(listHelper.favoriteBlog(oneBlog), oneBlog[0]);
+  });
 
   test("out of many blogs is the one with most likes", () => {
     const expectedFavBlog = {
@@ -314,10 +315,10 @@ describe("favourite blog", () => {
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
       __v: 0,
-    }
+    };
 
-    assert.deepStrictEqual(listHelper.favoriteBlog(bigListOfBlogs), expectedFavBlog)
-  })
+    assert.deepStrictEqual(listHelper.favoriteBlog(bigListOfBlogs), expectedFavBlog);
+  });
 });
 
 describe("most blogs", () => {
@@ -456,7 +457,7 @@ describe("most liked", () => {
       listHelper.mostLiked(oneBlog),
       expectedResult
     );
-  })
+  });
 
   test("should work with big list of blogs", () => {
     const expectedResult = {
@@ -464,7 +465,7 @@ describe("most liked", () => {
       likes: 17
     };
     assert.deepStrictEqual(listHelper.mostLiked(bigListOfBlogs), expectedResult);
-  })
+  });
 });
 
 after(async () => {

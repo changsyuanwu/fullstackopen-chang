@@ -77,7 +77,7 @@ describe("when there are some initial users", () => {
       const usersAfterPost = await helper.usersInDb();
       assert.strictEqual(usersAfterPost.length, helper.initialUsers.length);
     });
-  })
+  });
 });
 
 after(async () => {
