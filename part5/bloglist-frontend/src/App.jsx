@@ -12,7 +12,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -29,6 +29,13 @@ const App = () => {
     }
   }, []);
 
+  const showNotification = (notification) => {
+    setNotificationMessage(notification);
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 3000);
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -42,17 +49,26 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
-    } catch (exception) {
-      setErrorMessage("Invalid username or password");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 3000);
+      showNotification({
+        status: "success",
+        message: `Logged in as ${user.name}`,
+      });
+    }
+    catch (exception) {
+      showNotification({
+        status: "error",
+        message: "Invalid username or password",
+      });
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBloglistAppUser");
     setUser(null);
+    showNotification({
+      status: "success",
+      message: "Logged out",
+    })
   };
 
   const addBlog = (event) => {
@@ -68,12 +84,16 @@ const App = () => {
       event.target.title.value = "";
       event.target.author.value = "";
       event.target.url.value = "";
+      showNotification({
+        status: "success",
+        message: `A new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+      })
     });
   };
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={notificationMessage} />
       {user === null ? (
         <LoginPage
           username={username}
