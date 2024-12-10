@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import noteService from "./services/notes";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
+import NoteForm from "./components/NoteForm";
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -84,13 +85,6 @@ const App = () => {
     }
   };
 
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange} />
-      <button type="submit">save</button>
-    </form>
-  );
-
   return (
     <div>
       <h1>Notes</h1>
@@ -107,7 +101,11 @@ const App = () => {
       ) : (
         <div>
           <p>{user.name} logged-in</p>
-          {noteForm()}
+            <NoteForm
+              addNote={addNote}
+              newNote={newNote}
+              handleNoteChange={handleNoteChange}
+            />
         </div>
       )}
 
