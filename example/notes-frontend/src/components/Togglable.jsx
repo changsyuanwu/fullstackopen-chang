@@ -1,6 +1,6 @@
 import { useState, useImperativeHandle } from "react";
 
-const Togglable = ({ noteFormRef, ...props }) => {
+const Togglable = ({ refs, ...props }) => {
   const [visible, setVisible] = useState(false);
 
   const hideWhenVisible = { display: visible ? "none" : "" };
@@ -10,7 +10,7 @@ const Togglable = ({ noteFormRef, ...props }) => {
     setVisible(!visible);
   };
 
-  useImperativeHandle(noteFormRef, () => {
+  useImperativeHandle(refs, () => {
     return {
       toggleVisibility,
     };
