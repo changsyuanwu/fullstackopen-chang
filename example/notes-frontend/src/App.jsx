@@ -11,7 +11,6 @@ import Togglable from "./components/Togglable";
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState("");
@@ -35,17 +34,10 @@ const App = () => {
     }
   }, []);
 
-  const addNote = (event) => {
-    event.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-    };
-
+  const addNote = (noteObject) => {
     noteService.create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote));
-        setNewNote("");
       })
   };
 
@@ -128,9 +120,7 @@ const App = () => {
           </span>
           <Togglable buttonLabel="new note">
             <NoteForm
-              addNote={addNote}
-              newNote={newNote}
-              handleNoteChange={handleNoteChange}
+              createNote={addNote}
             />
           </Togglable>
         </div>
