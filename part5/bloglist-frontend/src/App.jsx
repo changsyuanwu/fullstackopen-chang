@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import LoginPage from './components/LoginPage'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import NewBlogForm from './components/NewBlogForm'
 import "./App.css";
 
 const App = () => {
@@ -14,9 +15,9 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    );
+    if (user) {
+      blogService.getAll().then((blogs) => setBlogs(blogs));
+    }
   }, [user]);
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setErrorMessage("Invalid username or password");
       setTimeout(() => {
         setErrorMessage(null);
       }, 3000);
@@ -52,6 +53,22 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBloglistAppUser");
     setUser(null);
+  };
+
+  const addBlog = (event) => {
+    event.preventDefault();
+    const blogObject = {
+      title: event.target.title.value,
+      author: event.target.author.value,
+      url: event.target.url.value,
+    };
+
+    blogService.create(blogObject).then((returnedBlog) => {
+      setBlogs(blogs.concat(returnedBlog));
+      event.target.title.value = "";
+      event.target.author.value = "";
+      event.target.url.value = "";
+    });
   };
 
   return (
@@ -69,9 +86,10 @@ const App = () => {
         <div>
           <h1>Blogs</h1>
           <span>
-            {user.name} logged in
+            Logged in as {user.name}
             <button onClick={handleLogout}>logout</button>
           </span>
+          <NewBlogForm addBlog={addBlog} />
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
