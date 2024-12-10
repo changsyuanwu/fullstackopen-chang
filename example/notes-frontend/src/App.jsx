@@ -7,6 +7,7 @@ import noteService from "./services/notes";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
 import NoteForm from "./components/NoteForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -16,6 +17,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [loginVisible, setLoginVisible] = useState(false);
 
   useEffect(() => {
     noteService.getAll()
@@ -109,27 +111,30 @@ const App = () => {
       <Notification message={errorMessage} />
 
       {user === null ? (
-        <LoginForm
-          username={username}
-          password={password}
-          handleLogin={handleLogin}
-          setUsername={setUsername}
-          setPassword={setPassword}
-        />
+        <Togglable buttonLabel="login">
+          <LoginForm
+            username={username}
+            password={password}
+            handleLogin={handleLogin}
+            setUsername={setUsername}
+            setPassword={setPassword}
+          />
+        </Togglable>
       ) : (
         <div>
           <span>
             {user.name} logged-in
             <button onClick={handleLogout}>logout</button>
           </span>
-          <NoteForm
-            addNote={addNote}
-            newNote={newNote}
-            handleNoteChange={handleNoteChange}
-          />
+          <Togglable buttonLabel="new note">
+            <NoteForm
+              addNote={addNote}
+              newNote={newNote}
+              handleNoteChange={handleNoteChange}
+            />
+          </Togglable>
         </div>
       )}
-
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? "important" : "all"}
