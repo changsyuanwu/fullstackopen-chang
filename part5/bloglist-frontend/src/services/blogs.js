@@ -12,8 +12,8 @@ const getAll = () => {
     headers: { Authorization: token },
   };
 
-  const request = axios.get(baseUrl, config)
-  return request.then(response => response.data)
+  const request = axios.get(baseUrl, config);
+  return request.then(response => response.data);
 }
 
 const create = async newObject => {
@@ -21,8 +21,22 @@ const create = async newObject => {
     headers: { Authorization: token },
   };
 
-  const response = await axios.post(baseUrl, newObject, config)
-  return response.data
+  const response = await axios.post(baseUrl, newObject, config);
+  return response.data;
 }
 
-export default { getAll, setToken, create }
+const update = async (id, newObject) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const response = await axios.put(`${baseUrl}/${id}`, newObject, config);
+  return response.data;
+}
+
+export default {
+  getAll,
+  setToken,
+  create,
+  update,
+}

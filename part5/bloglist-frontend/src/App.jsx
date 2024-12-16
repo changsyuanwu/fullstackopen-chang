@@ -72,16 +72,22 @@ const App = () => {
     })
   };
 
-  const addBlog = (blogObject) => {
-    blogService.create(blogObject)
-      .then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog));
-        showNotification({
-          status: "success",
-          message: `A new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-        })
-      });
+  const addBlog = async (blogObject) => {
+    const newBlog = await blogService.create(blogObject);
+    setBlogs(blogs.concat(newBlog));
+    showNotification({
+      status: "success",
+      message: `A new blog ${newBlog.title} by ${newBlog.author} added`,
+    });
   };
+
+  const updateBlog = async (blogObject) => {
+    const updatedBlog = await blogService.update(blogObject.id, blogObject);
+    setBlogs(blogs.map(
+      b => b.id === blogObject.id ? updatedBlog : b
+    ));
+    console.log(updatedBlog)
+  }
 
   return (
     <div>
@@ -105,7 +111,7 @@ const App = () => {
               <NewBlogForm createBlog={addBlog} />
           </Togglable>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
           ))}
         </div>
       )}
