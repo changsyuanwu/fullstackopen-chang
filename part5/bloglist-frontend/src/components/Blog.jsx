@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import BlogDetails from './BlogDetails';
+import { useState } from "react";
+import BlogDetails from "./BlogDetails";
 
 const Blog = ({ blog, updateBlog, deleteBlog, curUser }) => {
   const blogStyle = {
@@ -10,7 +10,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, curUser }) => {
     marginBottom: 5,
   };
 
-  const [detailsVisible, setDetailsVisible] = useState(false)
+  const [detailsVisible, setDetailsVisible] = useState(false);
 
   return (
     <div style={blogStyle}>
@@ -29,6 +29,6 @@ const Blog = ({ blog, updateBlog, deleteBlog, curUser }) => {
         /> : null}
     </div>
   );
-}
+};
 
-export default Blog
+export default Blog;

@@ -1,5 +1,3 @@
-import blogService from "../services/blogs";
-
 const BlogDetails = ({ blog, updateBlog, deleteBlog, curUser }) => {
   const handleLike = async () => {
     const updatedBlog = {

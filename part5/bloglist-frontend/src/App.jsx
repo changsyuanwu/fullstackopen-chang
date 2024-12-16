@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import blogService from './services/blogs'
-import LoginPage from './components/LoginPage'
-import loginService from './services/login'
-import Notification from './components/Notification'
-import NewBlogForm from './components/NewBlogForm'
+import { useState, useEffect } from "react";
+import Blog from "./components/Blog";
+import blogService from "./services/blogs";
+import LoginPage from "./components/LoginPage";
+import loginService from "./services/login";
+import Notification from "./components/Notification";
+import NewBlogForm from "./components/NewBlogForm";
 import "./App.css";
-import Togglable from './components/Togglable'
+import Togglable from "./components/Togglable";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -38,7 +38,7 @@ const App = () => {
     setTimeout(() => {
       setNotificationMessage(null);
     }, 3000);
-  }
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -72,7 +72,7 @@ const App = () => {
     showNotification({
       status: "success",
       message: "Logged out",
-    })
+    });
   };
 
   const addBlog = async (blogObject) => {
@@ -89,12 +89,12 @@ const App = () => {
     setBlogs(blogs.map(
       b => b.id === blogObject.id ? updatedBlog : b
     ));
-  }
+  };
 
   const deleteBlog = async (blogId) => {
-    const deletedBlog = await blogService.deleteBlog(blogId);
+    await blogService.deleteBlog(blogId);
     setBlogs(blogs.filter(b => b.id !== blogId));
-  }
+  };
 
   return (
     <div>
@@ -115,7 +115,7 @@ const App = () => {
             <button onClick={handleLogout}>logout</button>
           </span>
           <Togglable buttonLabel="New blog">
-              <NewBlogForm createBlog={addBlog} />
+            <NewBlogForm createBlog={addBlog} />
           </Togglable>
           {blogs.map((blog) => (
             <Blog
@@ -130,6 +130,6 @@ const App = () => {
       )}
     </div>
   );
-}
+};
 
-export default App
+export default App;

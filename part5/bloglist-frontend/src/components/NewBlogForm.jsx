@@ -10,7 +10,7 @@ const NewBlogForm = ({ createBlog }) => {
     event.target.title.value = "";
     event.target.author.value = "";
     event.target.url.value = "";
-  }
+  };
 
   return (
     <form onSubmit={addBlog}>

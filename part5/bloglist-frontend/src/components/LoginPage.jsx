@@ -1,9 +1,9 @@
-import LoginForm from "./LoginForm"
+import LoginForm from "./LoginForm";
 
 const LoginPage = ({ username, password, handleLogin, setUsername, setPassword }) => {
   return (
     <div>
-      <h1>Log in to Chang's bloglist app</h1>
+      <h1>Log in to Chang&apos;s bloglist app</h1>
       <LoginForm
         username={username}
         password={password}
@@ -13,6 +13,6 @@ const LoginPage = ({ username, password, handleLogin, setUsername, setPassword }
       />
     </div>
   );
-}
+};
 
-export default LoginPage
+export default LoginPage;
