@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import BlogDetails from './BlogDetails';
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, curUser }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -20,7 +20,13 @@ const Blog = ({ blog, updateBlog }) => {
           {detailsVisible ? "hide" : "view"}
         </button>
       </div>
-      {detailsVisible ? <BlogDetails blog={blog} updateBlog={updateBlog} /> : null}
+      {detailsVisible ?
+        <BlogDetails
+          blog={blog}
+          updateBlog={updateBlog}
+          deleteBlog={deleteBlog}
+          curUser={curUser}
+        /> : null}
     </div>
   );
 }

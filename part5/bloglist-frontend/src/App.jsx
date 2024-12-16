@@ -19,7 +19,7 @@ const App = () => {
     if (user) {
       blogService.getAll()
         .then((blogs) => {
-          setBlogs(blogs.sort((a, b) => b.likes - a.likes)); 
+          setBlogs(blogs.sort((a, b) => b.likes - a.likes));
         });
     }
   }, [user]);
@@ -91,6 +91,11 @@ const App = () => {
     ));
   }
 
+  const deleteBlog = async (blogId) => {
+    const deletedBlog = await blogService.deleteBlog(blogId);
+    setBlogs(blogs.filter(b => b.id !== blogId));
+  }
+
   return (
     <div>
       <Notification message={notificationMessage} />
@@ -113,7 +118,13 @@ const App = () => {
               <NewBlogForm createBlog={addBlog} />
           </Togglable>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={updateBlog}
+              deleteBlog={deleteBlog}
+              curUser={user}
+            />
           ))}
         </div>
       )}

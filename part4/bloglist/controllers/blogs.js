@@ -14,14 +14,14 @@ blogsRouter.post("/", async (request, response) => {
   const user = request.user;
 
   blog.user = user.id;
-  const newBlog = await blog.save();
+  let  newBlog = await blog.save();
   user.blogs = user.blogs.concat(newBlog._id);
   await user.save();
 
-  newBlog.user = {
-    username: user.username,
-    name: user.name,
-  };
+  newBlog = await newBlog.populate("user", {
+    username: 1,
+    name: 1
+  });
 
   response.status(201).json(newBlog);
 });
