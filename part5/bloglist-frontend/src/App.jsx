@@ -86,7 +86,6 @@ const App = () => {
     setBlogs(blogs.map(
       b => b.id === blogObject.id ? updatedBlog : b
     ));
-    console.log(updatedBlog)
   }
 
   return (

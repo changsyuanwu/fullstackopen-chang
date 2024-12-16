@@ -18,6 +18,11 @@ blogsRouter.post("/", async (request, response) => {
   user.blogs = user.blogs.concat(newBlog._id);
   await user.save();
 
+  newBlog.user = {
+    username: user.username,
+    name: user.name,
+  };
+
   response.status(201).json(newBlog);
 });
 
@@ -53,15 +58,14 @@ blogsRouter.put("/:id", async (request, response) => {
     user: body.user,
   };
 
-  const updatedBlog = await Blog.findByIdAndUpdate(
-    id,
-    blog,
-    {
-      new: true,
-      runValidators: true,
-      context: "query",
-    }
-  );
+  const updatedBlog = await Blog.findByIdAndUpdate(id, blog, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  }).populate("user", {
+    username: 1,
+    name: 1,
+  });
 
   response.json(updatedBlog);
 });

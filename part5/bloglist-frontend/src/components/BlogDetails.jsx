@@ -18,6 +18,7 @@ const BlogDetails = ({ blog, updateBlog }) => {
       <button onClick={handleLike}>
         like
       </button>
+      <p>added by {blog.user.name}</p>
     </div>
   );
 };
