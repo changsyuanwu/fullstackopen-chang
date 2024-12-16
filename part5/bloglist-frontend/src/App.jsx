@@ -72,20 +72,10 @@ const App = () => {
     })
   };
 
-  const addBlog = (event) => {
-    event.preventDefault();
-    const blogObject = {
-      title: event.target.title.value,
-      author: event.target.author.value,
-      url: event.target.url.value,
-    };
-
+  const addBlog = (blogObject) => {
     blogService.create(blogObject)
       .then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog));
-        event.target.title.value = "";
-        event.target.author.value = "";
-        event.target.url.value = "";
         showNotification({
           status: "success",
           message: `A new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
@@ -112,7 +102,7 @@ const App = () => {
             <button onClick={handleLogout}>logout</button>
           </span>
           <Togglable buttonLabel="New blog">
-              <NewBlogForm addBlog={addBlog} />
+              <NewBlogForm createBlog={addBlog} />
           </Togglable>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
