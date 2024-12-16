@@ -6,6 +6,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import NewBlogForm from './components/NewBlogForm'
 import "./App.css";
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -79,16 +80,17 @@ const App = () => {
       url: event.target.url.value,
     };
 
-    blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog));
-      event.target.title.value = "";
-      event.target.author.value = "";
-      event.target.url.value = "";
-      showNotification({
-        status: "success",
-        message: `A new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-      })
-    });
+    blogService.create(blogObject)
+      .then((returnedBlog) => {
+        setBlogs(blogs.concat(returnedBlog));
+        event.target.title.value = "";
+        event.target.author.value = "";
+        event.target.url.value = "";
+        showNotification({
+          status: "success",
+          message: `A new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        })
+      });
   };
 
   return (
@@ -109,7 +111,9 @@ const App = () => {
             Logged in as {user.name}
             <button onClick={handleLogout}>logout</button>
           </span>
-          <NewBlogForm addBlog={addBlog} />
+          <Togglable buttonLabel="New blog">
+              <NewBlogForm addBlog={addBlog} />
+          </Togglable>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
