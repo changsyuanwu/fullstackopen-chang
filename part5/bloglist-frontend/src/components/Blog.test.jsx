@@ -3,7 +3,7 @@ import Blog from "./Blog";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, vi, test } from "vitest";
 
-describe("Blog", () => {
+describe("<Blog />", () => {
   const curUser = {
     username: "testing user",
     name: "Testing User",
