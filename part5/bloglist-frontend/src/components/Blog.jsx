@@ -9,7 +9,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, curUser }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
-  
+
   const [detailsVisible, setDetailsVisible] = useState(false);
 
   return (

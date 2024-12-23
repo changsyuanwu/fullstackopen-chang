@@ -1,28 +1,25 @@
 import { render, screen } from "@testing-library/react";
 import Blog from "./Blog";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, vi } from "vitest";
+import { describe, expect, vi, test } from "vitest";
 
 describe("Blog", () => {
-  let container;
-  const user = {
+  const curUser = {
     username: "testing user",
     name: "Testing User",
     id: "123",
-  }
+  };
+
   const blog = {
     title: "Testing Blogs",
     author: "Testing Author",
     url: "https://testing.com",
     likes: 1,
-    user: user
+    user: curUser,
   };
 
-  beforeEach(() => {
-    container = render(<Blog blog={blog} curUser={user}/>).container;
-  });
-
   test("renders title and author", () => {
+    const container = render(<Blog blog={blog} curUser={curUser} />).container;
     const blogEl = container.querySelector(".blog");
     expect(blogEl).toHaveTextContent(blog.title);
     expect(blogEl).toHaveTextContent(blog.author);
@@ -34,6 +31,8 @@ describe("Blog", () => {
   });
 
   test("shows url and likes when button is clicked", async () => {
+    const container = render(<Blog blog={blog} curUser={curUser} />).container;
+
     // Check that they do not exist before the button is clicked
     const nonExistingElementWithURL = screen.queryByText(
       /https:\/\/testing\.com/
@@ -53,4 +52,23 @@ describe("Blog", () => {
     const elementContainingLikes = screen.getByText(/likes: 1/);
     expect(elementContainingLikes).toHaveTextContent(blog.likes.toString());
   });
-})
+
+  test("clicking the like button twice calls event handler twice", async () => {
+    const mockUpdate = vi.fn();
+    const container = render(
+      <Blog blog={blog} curUser={curUser} updateBlog={mockUpdate} />
+    ).container;
+    const user = userEvent.setup();
+
+    // Need to open the details first
+    const showButton = screen.getByText("view");
+    await user.click(showButton);
+
+    // Click the like button twice
+    const likeButton = screen.getByText("like");
+    await user.click(likeButton);
+    await user.click(likeButton);
+
+    expect(mockUpdate.mock.calls).toHaveLength(2);
+  });
+});
