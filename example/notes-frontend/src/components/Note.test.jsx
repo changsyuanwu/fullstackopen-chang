@@ -16,11 +16,17 @@ test("renders content", () => {
   expect(div).toHaveTextContent(
     "Component testing is done with react-testing-library"
   );
-
+  // Note that getByText throws an exception if the element is not found
   const element = screen.getByText(
     "Component testing is done with react-testing-library"
-  );
+  ); // { exact: false } can use this option to find an element that contains the text
   expect(element).toBeDefined();
+
+  /*
+  const { container } = render(<NoteForm createNote={createNote} />)
+  // This also works for an element with id "note-input"
+  const input = container.querySelector('#note-input')
+  */
 
   // Can use this to print out specific elements or the entire screen
   // screen.debug(element);
@@ -43,4 +49,16 @@ test("clicking the button calls event handler once", async () => {
   await user.click(button);
 
   expect(mockHandler.mock.calls).toHaveLength(1);
+});
+
+test("does not render this", () => {
+  const note = {
+    content: "This is a reminder",
+    important: true,
+  };
+
+  render(<Note note={note} />);
+
+  const element = screen.queryByText("do not want this thing to be rendered");
+  expect(element).toBeNull();
 });
