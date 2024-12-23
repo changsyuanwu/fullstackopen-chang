@@ -19,4 +19,7 @@ test("renders content", () => {
     "Component testing is done with react-testing-library"
   );
   expect(element).toBeDefined();
+
+  // Can use this to print out specific elements or the entire screen
+  // screen.debug(element);
 });
