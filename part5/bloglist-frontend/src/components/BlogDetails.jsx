@@ -14,13 +14,16 @@ const BlogDetails = ({ blog, updateBlog, deleteBlog, curUser }) => {
   };
 
   return (
-    <div>
+    <div className="blog-details">
       <p>{blog.url}</p>
       <p>likes: {blog.likes}</p>
       <button onClick={handleLike}>
         like
       </button>
-      <p>added by {blog.user.name}</p>
+      {blog.user ?
+        <p>added by {blog.user.name}</p>
+        : null
+      }
       {curUser.id === blog.user.id ?
         <button onClick={handleRemove}>
           remove
