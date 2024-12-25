@@ -11,6 +11,13 @@ describe("Blog app", () => {
         password: "password",
       },
     });
+    await request.post("/api/users", {
+      data: {
+        name: "Test User 2",
+        username: "testing2",
+        password: "password2",
+      },
+    });
 
     await page.goto("/");
   });
@@ -72,7 +79,7 @@ describe("Blog app", () => {
         );
       });
 
-      test("it can be deleted", async ({ page }) => {
+      test("it can be deleted by its creator", async ({ page }) => {
         await page.getByRole("button", { name: "view" }).click();
         // Register a dialog handler before clicking the button
         page.on("dialog", (dialog) => dialog.accept());
@@ -81,6 +88,15 @@ describe("Blog app", () => {
         await expect(
           page.locator(".blog", { hasText: "a blog created by playwright" })
         ).not.toBeVisible();
+      });
+
+      test("its remove button is not shown to users who are not its creator", async ({ page }) => {
+        // Switch users
+        await page.getByRole("button", { name: "logout" }).click();
+        await loginWith(page, "testing2", "password2");
+        await page.getByRole("button", { name: "view" }).click();
+
+        await expect(page.getByRole("button", { name: "remove" })).not.toBeVisible();
       });
 
       test("it can be liked", async ({ page }) => {
