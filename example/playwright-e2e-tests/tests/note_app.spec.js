@@ -46,7 +46,6 @@ describe('Note app', () => {
 
   describe("when logged in", () => {
     beforeEach(async ({ page }) => {
-      // Log in
       await loginWith(page, "testing", "password");
     });
 
@@ -57,14 +56,23 @@ describe('Note app', () => {
       ).toBeVisible();
     });
 
-    describe("and a note exists", () => {
+    describe("and several notes exists", () => {
       beforeEach(async ({ page }) => {
-        await createNote(page, "another note by playwright");
+        await createNote(page, "first note");
+        await createNote(page, "second note");
+        await createNote(page, "third note");
       });
 
-      test("importance can be changed", async ({ page }) => {
-        await page.getByRole("button", { name: "make not important" }).click();
-        await expect(page.getByText("make important")).toBeVisible();
+      test.only("importance can be changed", async ({ page }) => {
+        const otherNoteText = await page.getByText("second note");
+        const otherNoteElement = await otherNoteText.locator("..");
+
+        await otherNoteElement
+          .getByRole("button", { name: "make not important" })
+          .click();
+        await expect(
+          otherNoteElement.getByText("make important")
+        ).toBeVisible();
       });
     });
   });
