@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require("@playwright/test");
+const { loginWith, createBlog } = require("./helper");
 
 describe("Blog app", () => {
   beforeEach(async ({ page, request }) => {
@@ -24,26 +25,41 @@ describe("Blog app", () => {
 
   describe("Login", () => {
     test("succeeds with correct credentials", async ({ page }) => {
-      await page.getByTestId("username").fill("testing");
-      await page.getByTestId("password").fill("password");
-      await page.getByRole("button", { name: "login" }).click();
-      page.get
-
+      await loginWith(page, "testing", "password");
       const successDiv = page.locator(".success")
       await expect(successDiv).toContainText("Logged in as Test User");
       page.locator()
       await expect(page.locator(
         "span",
-        { hasText: "Logged in as Test User" })).toBeVisible();
+        { hasText: "Logged in as Test User" })
+      ).toBeVisible();
     });
 
     test("fails with incorrect credentials", async ({ page }) => {
-      await page.getByTestId("username").fill("testing");
-      await page.getByTestId("password").fill("wrong password");
-      await page.getByRole("button", { name: "login" }).click();
+      await loginWith(page, "testing", "wrong password");
       await expect(
         page.getByText("Invalid username or password")
       ).toBeVisible();
+    });
+  });
+
+  describe("When logged in", () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page, "testing", "password");
+    });
+
+    test.only("a new blog can be created", async ({ page }) => {
+      await createBlog(
+        page,
+        "a blog created by playwright",
+        "Playwright",
+        "https://playwright.dev/"
+      );
+
+      await expect(page.locator(
+        ".blog",
+        { hasText: "a blog created by playwright" }
+      )).toBeVisible();
     });
   });
 });

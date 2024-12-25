@@ -21,15 +21,27 @@ const NewBlogForm = ({ createBlog }) => {
     <form onSubmit={addBlog}>
       <div>
         title:
-        <input name="title" placeholder="An exciting title..."/>
+        <input
+          name="title"
+          placeholder="An exciting title..."
+          data-testid="title"
+        />
       </div>
       <div>
         author:
-        <input name="author" placeholder="The amazing author..."/>
+        <input
+          name="author"
+          placeholder="The amazing author..."
+          data-testid="author"
+        />
       </div>
       <div>
         url:
-        <input name="url" placeholder="https://www.example.com"/>
+        <input
+          name="url"
+          placeholder="https://www.example.com"
+          data-testid="url"
+        />
       </div>
       <button type="submit">create</button>
     </form>
