@@ -63,7 +63,7 @@ describe('Note app', () => {
         await createNote(page, "third note");
       });
 
-      test.only("importance can be changed", async ({ page }) => {
+      test("importance can be changed", async ({ page }) => {
         const otherNoteText = await page.getByText("second note");
         const otherNoteElement = await otherNoteText.locator("..");
 
