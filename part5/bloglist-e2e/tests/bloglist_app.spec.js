@@ -129,7 +129,7 @@ describe("Blog app", () => {
         );
       });
 
-      test.only("they are ordered by likes", async ({ page }) => {
+      test("they are ordered by likes", async ({ page }) => {
         // Check that blogs are ordered by creation date descending by default
         const initialBlogEntries = await page.locator(".blog").allInnerTexts();
         expect(initialBlogEntries).toEqual([
