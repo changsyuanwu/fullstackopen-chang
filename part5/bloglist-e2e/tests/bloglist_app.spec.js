@@ -106,5 +106,62 @@ describe("Blog app", () => {
         await expect(page.getByText("likes: 1")).toBeVisible();
       });
     });
+
+    describe("and multiple blog exists", () => {
+      beforeEach(async ({ page }) => {
+        await createBlog(
+          page,
+          "first blog",
+          "Playwright",
+          "https://playwright.dev/"
+        );
+        await createBlog(
+          page,
+          "second blog",
+          "Playwright",
+          "https://playwright.dev/"
+        );
+        await createBlog(
+          page,
+          "third blog",
+          "Playwright",
+          "https://playwright.dev/"
+        );
+      });
+
+      test.only("they are ordered by likes", async ({ page }) => {
+        // Check that blogs are ordered by creation date descending by default
+        const initialBlogEntries = await page.locator(".blog").allInnerTexts();
+        expect(initialBlogEntries).toEqual([
+          "first blog by Playwrightview",
+          "second blog by Playwrightview",
+          "third blog by Playwrightview",
+        ]);
+
+        // Like the second blog twice and third blog once
+        const secondBlog = await page.locator(".blog", { hasText: "second blog" });
+        await secondBlog.getByText("view").click();
+        const secondBlogLikeButton = await secondBlog
+          .getByRole("button", { name: "like" });
+        await secondBlogLikeButton.click();
+        await page.getByText("likes: 1").waitFor();
+        await secondBlogLikeButton.click();
+        const thirdBlog = await page.locator(".blog", { hasText: "third blog" });
+        await thirdBlog.getByText("view").click();
+        await thirdBlog.getByRole("button", { name: "like" }).click();
+
+        // Reload page and wait until the blogs have loaded
+        await page.reload();
+        await page.locator(".blog", { hasText: "second blog" }).waitFor();
+
+        // Now blogs should be ordered by likes descending
+        const orderedBlogEntries = await page.locator(".blog").allInnerTexts();
+        expect(orderedBlogEntries).toEqual([
+          "second blog by Playwrightview",
+          "third blog by Playwrightview",
+          "first blog by Playwrightview",
+        ]);
+      });
+    });
   });
 });

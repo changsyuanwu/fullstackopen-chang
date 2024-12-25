@@ -13,20 +13,21 @@ const Blog = ({ blog, updateBlog, deleteBlog, curUser }) => {
   const [detailsVisible, setDetailsVisible] = useState(false);
 
   return (
-    <div style={blogStyle}>
-      <div className="blog">
+    <div className="blog" style={blogStyle}>
+      <div>
         {blog.title} by {blog.author}
         <button onClick={() => setDetailsVisible(!detailsVisible)}>
           {detailsVisible ? "hide" : "view"}
         </button>
       </div>
-      {detailsVisible ?
+      {detailsVisible ? (
         <BlogDetails
           blog={blog}
           updateBlog={updateBlog}
           deleteBlog={deleteBlog}
           curUser={curUser}
-        /> : null}
+        />
+      ) : null}
     </div>
   );
 };

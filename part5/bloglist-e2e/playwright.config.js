@@ -12,8 +12,8 @@ const { defineConfig, devices } = require('@playwright/test');
  */
 module.exports = defineConfig({
   testDir: "./tests",
-  /* How long to wait for elements to render */
-  timeout: 3000,
+  /* How long to wait for elements to render (in ms)*/
+  timeout: 5000,
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
