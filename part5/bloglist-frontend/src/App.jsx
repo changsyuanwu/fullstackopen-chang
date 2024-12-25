@@ -42,7 +42,6 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
     try {
       const user = await loginService.login({
         username,
@@ -51,6 +50,7 @@ const App = () => {
 
       window.localStorage.setItem("loggedBloglistAppUser", JSON.stringify(user));
       setUser(user);
+      blogService.setToken(user.token);
       setUsername("");
       setPassword("");
       showNotification({
