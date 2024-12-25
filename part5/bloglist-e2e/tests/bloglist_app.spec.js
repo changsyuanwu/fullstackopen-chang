@@ -21,4 +21,29 @@ describe("Blog app", () => {
     await expect(page.getByTestId("username")).toBeVisible();
     await expect(page.getByTestId("password")).toBeVisible();
   });
+
+  describe("Login", () => {
+    test("succeeds with correct credentials", async ({ page }) => {
+      await page.getByTestId("username").fill("testing");
+      await page.getByTestId("password").fill("password");
+      await page.getByRole("button", { name: "login" }).click();
+      page.get
+
+      const successDiv = page.locator(".success")
+      await expect(successDiv).toContainText("Logged in as Test User");
+      page.locator()
+      await expect(page.locator(
+        "span",
+        { hasText: "Logged in as Test User" })).toBeVisible();
+    });
+
+    test("fails with incorrect credentials", async ({ page }) => {
+      await page.getByTestId("username").fill("testing");
+      await page.getByTestId("password").fill("wrong password");
+      await page.getByRole("button", { name: "login" }).click();
+      await expect(
+        page.getByText("Invalid username or password")
+      ).toBeVisible();
+    });
+  });
 });
