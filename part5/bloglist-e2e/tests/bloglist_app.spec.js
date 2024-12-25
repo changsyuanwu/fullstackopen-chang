@@ -62,18 +62,33 @@ describe("Blog app", () => {
       )).toBeVisible();
     });
 
-    test.only("a blog can be liked", async ({ page }) => {
-      await createBlog(
-        page,
-        "a blog created by playwright",
-        "Playwright",
-        "https://playwright.dev/"
-      );
+    describe("and a blog exists", () => {
+      beforeEach(async ({ page }) => {
+        await createBlog(
+          page,
+          "a blog created by playwright",
+          "Playwright",
+          "https://playwright.dev/"
+        );
+      });
 
-      await page.getByRole("button", { name: "view" }).click();
-      await expect(page.getByText("likes: 0")).toBeVisible();
-      await page.getByRole("button", { name: "like" }).click();
-      await expect(page.getByText("likes: 1")).toBeVisible();
+      test("it can be deleted", async ({ page }) => {
+        await page.getByRole("button", { name: "view" }).click();
+        // Register a dialog handler before clicking the button
+        page.on("dialog", (dialog) => dialog.accept());
+        await page.getByRole("button", { name: "remove" }).click();
+
+        await expect(
+          page.locator(".blog", { hasText: "a blog created by playwright" })
+        ).not.toBeVisible();
+      });
+
+      test("it can be liked", async ({ page }) => {
+        await page.getByRole("button", { name: "view" }).click();
+        await expect(page.getByText("likes: 0")).toBeVisible();
+        await page.getByRole("button", { name: "like" }).click();
+        await expect(page.getByText("likes: 1")).toBeVisible();
+      });
     });
   });
 });
