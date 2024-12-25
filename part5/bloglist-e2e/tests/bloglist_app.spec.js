@@ -131,7 +131,7 @@ describe("Blog app", () => {
 
       test("they are ordered by likes", async ({ page }) => {
         // Check that blogs are ordered by creation date descending by default
-        const initialBlogEntries = await page.locator(".blog").allInnerTexts();
+        const initialBlogEntries = await page.locator(".blog").allTextContents();
         expect(initialBlogEntries).toEqual([
           "first blog by Playwrightview",
           "second blog by Playwrightview",
@@ -155,11 +155,11 @@ describe("Blog app", () => {
         await page.locator(".blog", { hasText: "second blog" }).waitFor();
 
         // Now blogs should be ordered by likes descending
-        const orderedBlogEntries = await page.locator(".blog").allInnerTexts();
+        const orderedBlogEntries = await page.locator(".blog").allTextContents();
         expect(orderedBlogEntries).toEqual([
-          "second blog by Playwrightview",
-          "third blog by Playwrightview",
-          "first blog by Playwrightview",
+          "second blog by Playwrightview", // 2 likes
+          "third blog by Playwrightview", // 1 like
+          "first blog by Playwrightview", // 0 likes
         ]);
       });
     });
