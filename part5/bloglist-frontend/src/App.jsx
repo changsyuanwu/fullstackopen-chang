@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import LoginPage from "./components/LoginPage";
@@ -14,6 +14,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [notificationMessage, setNotificationMessage] = useState(null);
+  const blogFormRef = useRef();
 
   useEffect(() => {
     if (user) {
@@ -77,6 +78,7 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     const newBlog = await blogService.create(blogObject);
+    blogFormRef.current.toggleVisibility();
     setBlogs(blogs.concat(newBlog));
     showNotification({
       status: "success",
@@ -114,7 +116,7 @@ const App = () => {
             Logged in as {user.name}
             <button onClick={handleLogout}>logout</button>
           </span>
-          <Togglable buttonLabel="New blog">
+          <Togglable buttonLabel="New blog" refs={blogFormRef}>
             <NewBlogForm createBlog={addBlog} />
           </Togglable>
           {blogs.map((blog) => (
