@@ -48,7 +48,7 @@ describe("Blog app", () => {
       await loginWith(page, "testing", "password");
     });
 
-    test.only("a new blog can be created", async ({ page }) => {
+    test("a new blog can be created", async ({ page }) => {
       await createBlog(
         page,
         "a blog created by playwright",
@@ -60,6 +60,20 @@ describe("Blog app", () => {
         ".blog",
         { hasText: "a blog created by playwright" }
       )).toBeVisible();
+    });
+
+    test.only("a blog can be liked", async ({ page }) => {
+      await createBlog(
+        page,
+        "a blog created by playwright",
+        "Playwright",
+        "https://playwright.dev/"
+      );
+
+      await page.getByRole("button", { name: "view" }).click();
+      await expect(page.getByText("likes: 0")).toBeVisible();
+      await page.getByRole("button", { name: "like" }).click();
+      await expect(page.getByText("likes: 1")).toBeVisible();
     });
   });
 });
