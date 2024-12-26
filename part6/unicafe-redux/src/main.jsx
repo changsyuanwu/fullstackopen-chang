@@ -27,7 +27,7 @@ const App = () => {
 
   const reset = () => {
     store.dispatch({
-      type: "RESET",
+      type: "ZERO",
     });
   };
 
