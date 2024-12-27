@@ -6,8 +6,6 @@ import { createStore, combineReducers } from "redux";
 
 import filterReducer from "./reducers/filterReducer";
 import noteReducer from "./reducers/noteReducer";
-import { createNote } from "./reducers/noteReducer";
-import { filterChange } from "./reducers/filterReducer";
 
 const reducer = combineReducers({
   notes: noteReducer,
