@@ -4,7 +4,7 @@ const notificationSlice = createSlice({
   name: "notification",
   initialState: "",
   reducers: {
-    setNotification(state, action) {
+    displayNotification(state, action) {
       return action.payload;
     },
     // eslint-disable-next-line no-unused-vars
@@ -14,5 +14,15 @@ const notificationSlice = createSlice({
   },
 });
 
-export const { setNotification, removeNotification } = notificationSlice.actions;
+export const { displayNotification, removeNotification } = notificationSlice.actions;
+
+export const setNotification = (message, displayDurInSecs = 5) => {
+  return async (dispatch) => {
+    dispatch(displayNotification(message));
+    setTimeout(() => {
+      dispatch(removeNotification());
+    }, displayDurInSecs * 1000);
+  };
+}
+
 export default notificationSlice.reducer;
