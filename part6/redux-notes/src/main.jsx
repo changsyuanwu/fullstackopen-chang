@@ -2,17 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import App from "./App";
-import { configureStore } from "@reduxjs/toolkit";
-
-import filterReducer from "./reducers/filterReducer";
-import noteReducer from "./reducers/noteReducer";
-
-const store = configureStore({
-  reducer: {
-    filter: filterReducer,
-    notes: noteReducer,
-  },
-});
+import store from "./app/store";
 
 store.subscribe(() => console.log(store.getState()));
 
