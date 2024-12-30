@@ -4,8 +4,8 @@ import { voteAnecdote } from "../reducers/anecdoteReducer";
 const AnecdoteList = () => {
   const dispatch = useDispatch()
   const anecdotes = useSelector(state => {
-    return state.anecdotes
-      .filter(anecdote => anecdote.content.includes(state.filter))
+    return [...state.anecdotes
+      .filter(anecdote => anecdote.content.includes(state.filter))]
       .sort((a, b) => b.votes - a.votes)
   })
 
