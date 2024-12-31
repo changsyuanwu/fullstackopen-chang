@@ -26,7 +26,7 @@ const App = () => {
       const anecdotes = queryClient.getQueryData(["anecdotes"]);
       queryClient.setQueryData(["anecdotes"], anecdotes.map(a => a.id === newAnecdote.id ? newAnecdote : a));
       showNotification(`you voted "${newAnecdote.content}"`);
-    }
+    },
   });
 
   const handleVote = (anecdote) => {
