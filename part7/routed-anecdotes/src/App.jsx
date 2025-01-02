@@ -73,7 +73,7 @@ const Footer = () => (
   </div>
 )
 
-const CreateNew = (props) => {
+const CreateNew = ({ addNew}) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -81,12 +81,15 @@ const CreateNew = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    props.addNew({
+    addNew({
       content,
       author,
       info,
       votes: 0
     })
+    setContent('')
+    setAuthor('')
+    setInfo('')
   }
 
   return (
@@ -112,6 +115,17 @@ const CreateNew = (props) => {
 
 }
 
+const Notification = ({ notification }) => {
+  if (notification === '') {
+    return null
+  }
+  return (
+    <div className='notification'>
+      {notification}
+    </div>
+  )
+}
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -132,9 +146,20 @@ const App = () => {
 
   const [notification, setNotification] = useState('')
 
+  const navigate = useNavigate();
+
+  const showNotification = (notification, duration = 5) => {
+    setNotification(notification)
+    setTimeout(() => {
+      setNotification('')
+    }, duration * 1000)
+  }
+
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    showNotification(`a new anecdote '${anecdote.content}' created!`);
+    navigate("/")
   }
 
   const anecdoteById = (id) =>
@@ -157,6 +182,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} />
       <Routes>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/create' element={<CreateNew addNew={addNew} />} />
