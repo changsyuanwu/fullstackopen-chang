@@ -18,13 +18,24 @@ const useField = (type) => {
 const useResource = (baseUrl) => {
   const [resources, setResources] = useState([])
 
-  // ...
+  const getAll = async () => {
+    const response = await axios.get(baseUrl);
+    setResources(response.data)
+    return response.data;
+  };
 
-  const create = (resource) => {
-    // ...
+  const create = async (newObject) => {
+    const response = await axios.post(baseUrl, newObject);
+    getAll();
+    return response.data;
   }
 
+  useEffect(() => {
+    getAll()
+  }, [baseUrl])
+
   const service = {
+    getAll,
     create
   }
 
@@ -45,12 +56,12 @@ const App = () => {
     event.preventDefault()
     noteService.create({ content: content.value })
   }
- 
+
   const handlePersonSubmit = (event) => {
     event.preventDefault()
     personService.create({ name: name.value, number: number.value})
   }
-
+  console.log(notes)
   return (
     <div>
       <h2>notes</h2>
