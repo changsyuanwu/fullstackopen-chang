@@ -1,11 +1,11 @@
-const BlogDetails = ({ blog, updateBlog, deleteBlog, curUser }) => {
+import { useDispatch } from "react-redux";
+import { deleteBlog, likeBlog } from "../reducers/blogReducer";
+
+const BlogDetails = ({ blog, deleteBlog, curUser }) => {
+  const dispatch = useDispatch();
+
   const handleLike = async () => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id,
-    };
-    updateBlog(updatedBlog);
+    dispatch(likeBlog(blog));
   };
 
   const handleRemove = async () => {

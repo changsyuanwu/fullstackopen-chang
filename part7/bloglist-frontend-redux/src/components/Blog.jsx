@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BlogDetails from "./BlogDetails";
 
-const Blog = ({ blog, updateBlog, deleteBlog, curUser }) => {
+const Blog = ({ blog, deleteBlog, curUser }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -23,7 +23,6 @@ const Blog = ({ blog, updateBlog, deleteBlog, curUser }) => {
       {detailsVisible ? (
         <BlogDetails
           blog={blog}
-          updateBlog={updateBlog}
           deleteBlog={deleteBlog}
           curUser={curUser}
         />

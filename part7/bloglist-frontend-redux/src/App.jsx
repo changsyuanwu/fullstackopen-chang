@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
-import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import LoginPage from "./components/LoginPage";
 import loginService from "./services/login";
@@ -80,11 +79,6 @@ const App = () => {
     blogFormRef.current.toggleVisibility();
   };
 
-  const updateBlog = async (blogObject) => {
-    const updatedBlog = await blogService.update(blogObject.id, blogObject);
-    setBlogs(blogs.map((b) => (b.id === blogObject.id ? updatedBlog : b)));
-  };
-
   const deleteBlog = async (blogId) => {
     await blogService.deleteBlog(blogId);
     setBlogs(blogs.filter((b) => b.id !== blogId));
@@ -112,7 +106,6 @@ const App = () => {
             <NewBlogForm toggleFormVisibility={toggleFormVisibility}/>
           </Togglable>
           <BlogList
-            updateBlog={updateBlog}
             deleteBlog={deleteBlog}
             curUser={user}
           />
