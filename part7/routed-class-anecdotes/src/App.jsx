@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 class App extends React.Component {
   constructor(props) {
@@ -9,6 +10,12 @@ class App extends React.Component {
       current: 0,
     };
   }
+
+  componentDidMount = () => {
+    axios.get("http://localhost:3001/anecdotes").then((response) => {
+      this.setState({ anecdotes: response.data });
+    });
+  };
 
   render() {
     if (this.state.anecdotes.length === 0) {
