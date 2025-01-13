@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
+import { initializeBlogs } from "./reducers/blogReducer";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import LoginPage from "./components/LoginPage";
@@ -12,18 +13,19 @@ import Togglable from "./components/Togglable";
 
 const App = () => {
   const dispatch = useDispatch();
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector((state) => {
+    return [...state.blogs]
+      .sort((a, b) => b.likes - a.likes);
+  });
+  const [blogs2, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [notificationMessage, setNotificationMessage] = useState(null);
   const blogFormRef = useRef();
 
   useEffect(() => {
     if (user) {
-      blogService.getAll().then((blogs) => {
-        setBlogs(blogs.sort((a, b) => b.likes - a.likes));
-      });
+      dispatch(initializeBlogs());
     }
   }, [user]);
 
@@ -35,13 +37,6 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
-
-  const showNotification = (notification) => {
-    setNotificationMessage(notification);
-    setTimeout(() => {
-      setNotificationMessage(null);
-    }, 3000);
-  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -98,7 +93,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notificationMessage} />
+      <Notification />
       {user === null ? (
         <LoginPage
           username={username}
