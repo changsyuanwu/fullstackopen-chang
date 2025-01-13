@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
 import { setNotification } from "../reducers/notificationReducer";
+import { createBlog } from "../reducers/blogReducer";
 
-const NewBlogForm = ({ createBlog }) => {
+const NewBlogForm = ({ toggleFormVisibility }) => {
   const dispatch = useDispatch();
 
   const addBlog = async (event) => {
@@ -12,7 +13,7 @@ const NewBlogForm = ({ createBlog }) => {
       author: author.value,
       url: url.value,
     };
-    await createBlog(blogObject);
+    dispatch(createBlog(blogObject));
     title.value = "";
     author.value = "";
     url.value = "";
@@ -20,6 +21,7 @@ const NewBlogForm = ({ createBlog }) => {
       status: "success",
       message: `A new blog ${blogObject.title} by ${blogObject.author} added`,
     }));
+    toggleFormVisibility();
   };
 
   return (

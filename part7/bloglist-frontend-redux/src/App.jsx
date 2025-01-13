@@ -76,10 +76,8 @@ const App = () => {
     }));
   };
 
-  const addBlog = async (blogObject) => {
-    const newBlog = await blogService.create(blogObject);
+  const toggleFormVisibility = () => {
     blogFormRef.current.toggleVisibility();
-    setBlogs(blogs.concat(newBlog));
   };
 
   const updateBlog = async (blogObject) => {
@@ -111,7 +109,7 @@ const App = () => {
             <button onClick={handleLogout}>logout</button>
           </span>
           <Togglable buttonLabel="New blog" refs={blogFormRef}>
-            <NewBlogForm createBlog={addBlog} />
+            <NewBlogForm toggleFormVisibility={toggleFormVisibility}/>
           </Togglable>
           <BlogList
             updateBlog={updateBlog}
