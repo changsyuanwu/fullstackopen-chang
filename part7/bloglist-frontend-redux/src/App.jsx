@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import LoginPage from "./components/LoginPage";
@@ -9,6 +11,7 @@ import "./App.css";
 import Togglable from "./components/Togglable";
 
 const App = () => {
+  const dispatch = useDispatch();
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -56,35 +59,31 @@ const App = () => {
       blogService.setToken(user.token);
       setUsername("");
       setPassword("");
-      showNotification({
+      dispatch(setNotification({
         status: "success",
         message: `Logged in as ${user.name}`,
-      });
+      }));
     } catch (exception) {
-      showNotification({
+      dispatch(setNotification({
         status: "error",
         message: "Invalid username or password",
-      });
+      }))
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBloglistAppUser");
     setUser(null);
-    showNotification({
+    dispatch(setNotification({
       status: "success",
       message: "Logged out",
-    });
+    }));
   };
 
   const addBlog = async (blogObject) => {
     const newBlog = await blogService.create(blogObject);
     blogFormRef.current.toggleVisibility();
     setBlogs(blogs.concat(newBlog));
-    showNotification({
-      status: "success",
-      message: `A new blog ${newBlog.title} by ${newBlog.author} added`,
-    });
   };
 
   const updateBlog = async (blogObject) => {
