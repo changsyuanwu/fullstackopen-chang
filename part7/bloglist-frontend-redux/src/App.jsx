@@ -10,6 +10,7 @@ import Notification from "./components/Notification";
 import NewBlogForm from "./components/NewBlogForm";
 import "./App.css";
 import Togglable from "./components/Togglable";
+import BlogList from "./components/BlogList";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -112,15 +113,11 @@ const App = () => {
           <Togglable buttonLabel="New blog" refs={blogFormRef}>
             <NewBlogForm createBlog={addBlog} />
           </Togglable>
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              updateBlog={updateBlog}
-              deleteBlog={deleteBlog}
-              curUser={user}
-            />
-          ))}
+          <BlogList
+            updateBlog={updateBlog}
+            deleteBlog={deleteBlog}
+            curUser={user}
+          />
         </div>
       )}
     </div>
