@@ -5,7 +5,6 @@ import { initializeCurrentUser, logout } from "./reducers/currentUserReducer";
 import {
   Routes,
   Route,
-  Link,
   useMatch,
   useNavigate
 } from "react-router-dom";
@@ -13,6 +12,7 @@ import UsersPage from "./components/UsersPage";
 import LoginPage from "./components/LoginPage";
 import Notification from "./components/Notification";
 import BlogsPage from "./components/BlogsPage";
+import Menu from "./components/Menu";
 import "./App.css";
 
 const App = () => {
@@ -38,6 +38,7 @@ const App = () => {
         <LoginPage />
       ) : (
         <div>
+          <Menu />
           <h1>Blogs</h1>
           <span>
             Logged in as {user.name}
