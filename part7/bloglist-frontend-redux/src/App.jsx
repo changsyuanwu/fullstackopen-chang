@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
-import { initializeBlogs } from "./reducers/blogReducer";
-import { initializeUser, logout } from "./reducers/userReducer";
+import { initializeCurrentUser, logout } from "./reducers/currentUserReducer";
 import {
   Routes,
   Route,
@@ -21,13 +20,7 @@ const App = () => {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (user) {
-      dispatch(initializeBlogs());
-    }
-  }, [user]);
-
-  useEffect(() => {
-    dispatch(initializeUser());
+    dispatch(initializeCurrentUser());
   }, []);
 
   const handleLogout = () => {
