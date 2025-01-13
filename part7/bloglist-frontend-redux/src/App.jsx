@@ -2,25 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
-import blogService from "./services/blogs";
 import LoginPage from "./components/LoginPage";
-import loginService from "./services/login";
 import Notification from "./components/Notification";
 import NewBlogForm from "./components/NewBlogForm";
 import "./App.css";
 import Togglable from "./components/Togglable";
 import BlogList from "./components/BlogList";
+import { initializeUser, logout } from "./reducers/userReducer";
 
 const App = () => {
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => {
-    return [...state.blogs]
-      .sort((a, b) => b.likes - a.likes);
-  });
-  const [blogs2, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.user);
   const blogFormRef = useRef();
 
   useEffect(() => {
@@ -30,45 +22,11 @@ const App = () => {
   }, [user]);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBloglistAppUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
+    dispatch(initializeUser());
   }, []);
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-
-      window.localStorage.setItem(
-        "loggedBloglistAppUser",
-        JSON.stringify(user),
-      );
-      setUser(user);
-      blogService.setToken(user.token);
-      setUsername("");
-      setPassword("");
-      dispatch(setNotification({
-        status: "success",
-        message: `Logged in as ${user.name}`,
-      }));
-    } catch (exception) {
-      dispatch(setNotification({
-        status: "error",
-        message: "Invalid username or password",
-      }))
-    }
-  };
-
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedBloglistAppUser");
-    setUser(null);
+    dispatch(logout());
     dispatch(setNotification({
       status: "success",
       message: "Logged out",
@@ -83,13 +41,7 @@ const App = () => {
     <div>
       <Notification />
       {user === null ? (
-        <LoginPage
-          username={username}
-          password={password}
-          handleLogin={handleLogin}
-          setUsername={setUsername}
-          setPassword={setPassword}
-        />
+        <LoginPage />
       ) : (
         <div>
           <h1>Blogs</h1>
