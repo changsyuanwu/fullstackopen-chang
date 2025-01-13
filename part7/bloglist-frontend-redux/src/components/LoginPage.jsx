@@ -1,6 +1,12 @@
 import LoginForm from "./LoginForm";
 
-const LoginPage = ({ username, password, handleLogin, setUsername, setPassword }) => {
+const LoginPage = ({
+  username,
+  password,
+  handleLogin,
+  setUsername,
+  setPassword,
+}) => {
   return (
     <div>
       <h1>Log in to Chang&apos;s bloglist app</h1>

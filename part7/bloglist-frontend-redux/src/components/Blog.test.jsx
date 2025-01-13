@@ -35,7 +35,7 @@ describe("<Blog />", () => {
 
     // Check that they do not exist before the button is clicked
     const nonExistingElementWithURL = screen.queryByText(
-      /https:\/\/testing\.com/
+      /https:\/\/testing\.com/,
     );
     expect(nonExistingElementWithURL).toBeNull();
     const nonExistingElementWithLikes = screen.queryByText(/likes: 1/);
@@ -56,7 +56,7 @@ describe("<Blog />", () => {
   test("clicking the like button twice calls event handler twice", async () => {
     const mockUpdate = vi.fn();
     const container = render(
-      <Blog blog={blog} curUser={curUser} updateBlog={mockUpdate} />
+      <Blog blog={blog} curUser={curUser} updateBlog={mockUpdate} />,
     ).container;
     const user = userEvent.setup();
 

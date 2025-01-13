@@ -18,10 +18,9 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      blogService.getAll()
-        .then((blogs) => {
-          setBlogs(blogs.sort((a, b) => b.likes - a.likes));
-        });
+      blogService.getAll().then((blogs) => {
+        setBlogs(blogs.sort((a, b) => b.likes - a.likes));
+      });
     }
   }, [user]);
 
@@ -49,7 +48,10 @@ const App = () => {
         password,
       });
 
-      window.localStorage.setItem("loggedBloglistAppUser", JSON.stringify(user));
+      window.localStorage.setItem(
+        "loggedBloglistAppUser",
+        JSON.stringify(user),
+      );
       setUser(user);
       blogService.setToken(user.token);
       setUsername("");
@@ -58,8 +60,7 @@ const App = () => {
         status: "success",
         message: `Logged in as ${user.name}`,
       });
-    }
-    catch (exception) {
+    } catch (exception) {
       showNotification({
         status: "error",
         message: "Invalid username or password",
@@ -88,14 +89,12 @@ const App = () => {
 
   const updateBlog = async (blogObject) => {
     const updatedBlog = await blogService.update(blogObject.id, blogObject);
-    setBlogs(blogs.map(
-      b => b.id === blogObject.id ? updatedBlog : b
-    ));
+    setBlogs(blogs.map((b) => (b.id === blogObject.id ? updatedBlog : b)));
   };
 
   const deleteBlog = async (blogId) => {
     await blogService.deleteBlog(blogId);
-    setBlogs(blogs.filter(b => b.id !== blogId));
+    setBlogs(blogs.filter((b) => b.id !== blogId));
   };
 
   return (

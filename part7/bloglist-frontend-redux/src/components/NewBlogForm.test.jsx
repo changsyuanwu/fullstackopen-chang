@@ -27,7 +27,7 @@ describe("<NewBlogForm />", () => {
     expect(mockCreateBlog.mock.calls[0][0]).toEqual({
       title: "Testing Blogs",
       author: "Testing Author",
-      url: "https://testing.com"
+      url: "https://testing.com",
     });
   });
 });

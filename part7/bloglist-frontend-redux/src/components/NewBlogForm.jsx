@@ -1,11 +1,7 @@
 const NewBlogForm = ({ createBlog }) => {
   const addBlog = async (event) => {
     event.preventDefault();
-    const {
-      title,
-      author,
-      url,
-    } = event.target.elements;
+    const { title, author, url } = event.target.elements;
     const blogObject = {
       title: title.value,
       author: author.value,
