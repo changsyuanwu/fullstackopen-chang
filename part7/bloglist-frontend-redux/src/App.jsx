@@ -4,15 +4,14 @@ import { setNotification } from "./reducers/notificationReducer";
 import { initializeCurrentUser, logout } from "./reducers/currentUserReducer";
 import {
   Routes,
-  Route,
-  useNavigate
+  Route
 } from "react-router-dom";
 import UsersPage from "./components/UsersPage";
 import LoginPage from "./components/LoginPage";
 import Notification from "./components/Notification";
 import BlogsPage from "./components/BlogsPage";
 import Menu from "./components/Menu";
-import UserDetails from "./components/UserDetails";
+import UserDetailsPage from "./components/UserDetailsPage";
 import "./App.css";
 
 const App = () => {
@@ -47,7 +46,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<BlogsPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/users/:id" element={<UserDetails />} />
+            <Route path="/users/:id" element={<UserDetailsPage />} />
             <Route path="/users" element={<UsersPage />} />
           </Routes>
         </div>

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useMatch } from "react-router-dom";
 import { initializeUsers } from "../reducers/userReducer";
 
-const UserDetails = () => {
+const UserDetailsPage = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser);
   const users = useSelector((state) => state.users);
@@ -40,4 +40,4 @@ const UserDetails = () => {
   );
 }
 
-export default UserDetails;
+export default UserDetailsPage;
