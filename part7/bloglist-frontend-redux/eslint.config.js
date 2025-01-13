@@ -4,6 +4,7 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import vitestGlobals from "eslint-plugin-vitest-globals";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
   {
@@ -51,4 +52,5 @@ export default [
       "react/prop-types": 0,
     },
   },
+  eslintConfigPrettier,
 ];
