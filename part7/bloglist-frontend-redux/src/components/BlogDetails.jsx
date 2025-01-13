@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { deleteBlog, likeBlog } from "../reducers/blogReducer";
 
-const BlogDetails = ({ blog, deleteBlog, curUser }) => {
+const BlogDetails = ({ blog, curUser }) => {
   const dispatch = useDispatch();
 
   const handleLike = async () => {
@@ -10,7 +10,7 @@ const BlogDetails = ({ blog, deleteBlog, curUser }) => {
 
   const handleRemove = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`))
-      deleteBlog(blog.id);
+      dispatch(deleteBlog(blog.id));
   };
 
   return (

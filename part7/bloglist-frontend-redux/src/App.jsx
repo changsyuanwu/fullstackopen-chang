@@ -79,11 +79,6 @@ const App = () => {
     blogFormRef.current.toggleVisibility();
   };
 
-  const deleteBlog = async (blogId) => {
-    await blogService.deleteBlog(blogId);
-    setBlogs(blogs.filter((b) => b.id !== blogId));
-  };
-
   return (
     <div>
       <Notification />
@@ -106,7 +101,6 @@ const App = () => {
             <NewBlogForm toggleFormVisibility={toggleFormVisibility}/>
           </Togglable>
           <BlogList
-            deleteBlog={deleteBlog}
             curUser={user}
           />
         </div>
