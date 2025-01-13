@@ -1,8 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteBlog, likeBlog } from "../reducers/blogReducer";
 
-const BlogDetails = ({ blog, curUser }) => {
+const BlogDetails = ({ blog }) => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.currentUser);
 
   const handleLike = async () => {
     dispatch(likeBlog(blog));
@@ -19,7 +20,7 @@ const BlogDetails = ({ blog, curUser }) => {
       <p>likes: {blog.likes}</p>
       <button onClick={handleLike}>like</button>
       {blog.user ? <p>added by {blog.user.name}</p> : null}
-      {curUser.id === blog.user.id ? (
+      {user.id === blog.user.id ? (
         <button onClick={handleRemove}>remove</button>
       ) : null}
     </div>

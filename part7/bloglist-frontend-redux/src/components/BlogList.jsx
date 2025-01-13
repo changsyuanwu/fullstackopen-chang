@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { initializeBlogs } from "../reducers/blogReducer";
 import Blog from "./Blog";
 
-const BlogList = ({ updateBlog, deleteBlog, curUser }) => {
+const BlogList = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.currentUser);
   const blogs = useSelector((state) => {
     return [...state.blogs].sort((a, b) => b.likes - a.likes);
   });
@@ -22,9 +22,6 @@ const BlogList = ({ updateBlog, deleteBlog, curUser }) => {
         <Blog
           key={blog.id}
           blog={blog}
-          updateBlog={updateBlog}
-          deleteBlog={deleteBlog}
-          curUser={curUser}
         />
       ))}
     </>

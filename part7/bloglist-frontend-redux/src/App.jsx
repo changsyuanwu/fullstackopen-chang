@@ -17,7 +17,7 @@ import "./App.css";
 
 const App = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.currentUser);
 
   useEffect(() => {
     dispatch(initializeCurrentUser());
