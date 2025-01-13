@@ -1,19 +1,24 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
+import { initializeUser, logout } from "./reducers/userReducer";
+import {
+  Routes,
+  Route,
+  Link,
+  useMatch,
+  useNavigate
+} from "react-router-dom";
+import UsersPage from "./components/UsersPage";
 import LoginPage from "./components/LoginPage";
 import Notification from "./components/Notification";
-import NewBlogForm from "./components/NewBlogForm";
+import BlogsPage from "./components/BlogsPage";
 import "./App.css";
-import Togglable from "./components/Togglable";
-import BlogList from "./components/BlogList";
-import { initializeUser, logout } from "./reducers/userReducer";
 
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const blogFormRef = useRef();
 
   useEffect(() => {
     if (user) {
@@ -33,10 +38,6 @@ const App = () => {
     }));
   };
 
-  const toggleFormVisibility = () => {
-    blogFormRef.current.toggleVisibility();
-  };
-
   return (
     <div>
       <Notification />
@@ -49,12 +50,11 @@ const App = () => {
             Logged in as {user.name}
             <button onClick={handleLogout}>logout</button>
           </span>
-          <Togglable buttonLabel="New blog" refs={blogFormRef}>
-            <NewBlogForm toggleFormVisibility={toggleFormVisibility}/>
-          </Togglable>
-          <BlogList
-            curUser={user}
-          />
+          <Routes>
+            <Route path="/" element={<BlogsPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/users" element={<UsersPage />} />
+          </Routes>
         </div>
       )}
     </div>
