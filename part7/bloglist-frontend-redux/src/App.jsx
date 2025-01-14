@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setNotification } from "./reducers/notificationReducer";
-import { initializeCurrentUser, logout } from "./reducers/currentUserReducer";
+import { initializeCurrentUser } from "./reducers/currentUserReducer";
 import {
   Routes,
   Route
@@ -23,14 +22,6 @@ const App = () => {
     dispatch(initializeCurrentUser());
   }, []);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(setNotification({
-      status: "success",
-      message: "Logged out",
-    }));
-  };
-
   return (
     <div>
       <Notification />
@@ -40,10 +31,6 @@ const App = () => {
         <div>
           <Menu />
           <h1>Blogs</h1>
-          <span>
-            Logged in as {user.name}
-            <button onClick={handleLogout}>logout</button>
-          </span>
           <Routes>
             <Route path="/" element={<BlogsPage />} />
             <Route path="/login" element={<LoginPage />} />

@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import BlogDetails from "./BlogDetails";
 
 const Blog = ({ blog }) => {
   const blogStyle = {
@@ -10,8 +8,6 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
-
-  const [detailsVisible, setDetailsVisible] = useState(false);
 
   return (
     <div className="blog" style={blogStyle}>
