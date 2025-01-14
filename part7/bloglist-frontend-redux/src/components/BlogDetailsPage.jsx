@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useMatch } from "react-router-dom";
+import {
+  Typography
+} from "@mui/material";
 import { initializeBlogs } from "../reducers/blogReducer";
 import BlogDetails from "./BlogDetails";
 import Comments from "./Comments";
@@ -20,13 +23,13 @@ const BlogDetailsPage = () => {
   }, [currentUser]);
 
   if (!blog) {
-    return <p>blog does not exist!</p>;
+    return <Typography>blog does not exist!</Typography>;
   }
 
   return (
     <div>
-      <h2>{blog.title}</h2>
-      <p>{blog.author}</p>
+      <Typography variant="h4" component={"h1"}>{blog.title}</Typography>
+      <Typography variant="subtitle1">{blog.author}</Typography>
       <BlogDetails blog={blog} />
       <Comments blog={blog} />
     </div>

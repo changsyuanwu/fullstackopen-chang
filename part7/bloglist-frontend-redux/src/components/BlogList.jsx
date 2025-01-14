@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { initializeBlogs } from "../reducers/blogReducer";
 import Blog from "./Blog";
+import { List } from "@mui/material";
 
 const BlogList = () => {
   const dispatch = useDispatch();
@@ -17,14 +18,14 @@ const BlogList = () => {
   }, [user]);
 
   return (
-    <>
+    <List>
       {blogs.map((blog) => (
         <Blog
           key={blog.id}
           blog={blog}
         />
       ))}
-    </>
+    </List>
   );
 };
 

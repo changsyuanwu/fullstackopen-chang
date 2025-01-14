@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Typography
+} from "@mui/material";
 import { logout } from "../reducers/currentUserReducer";
 import { setNotification } from "../reducers/notificationReducer";
 
@@ -17,23 +23,23 @@ const Menu = () => {
     );
   };
 
-  const padding = {
-    paddingRight: 5,
-  };
-
   return (
-    <div>
-      <Link to="/" style={padding}>
-        blogs
-      </Link>
-      <Link to="/users" style={padding}>
-        users
-      </Link>
-      <span>
-        logged in as {user.name}
-        <button onClick={handleLogout}>logout</button>
-      </span>
-    </div>
+    <AppBar position="static">
+      <Toolbar>
+        <Button color="inherit" component={Link} to="/">
+          blogs
+        </Button>
+        <Button color="inherit" component={Link} to="/users">
+          users
+        </Button>
+        <Typography>
+          <em>logged in as {user.name}</em>
+        </Typography>
+        <Button color="inherit" onClick={handleLogout}>
+          logout
+        </Button>
+      </Toolbar>
+    </AppBar>
   );
 }
 

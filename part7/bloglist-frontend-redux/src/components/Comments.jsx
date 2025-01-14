@@ -1,4 +1,11 @@
 import { useDispatch } from "react-redux";
+import {
+  Button,
+  List,
+  ListItem,
+  TextField,
+  Typography
+} from "@mui/material";
 import { addCommentOnBlog } from "../reducers/blogReducer";
 
 const Comments = ({ blog }) => {
@@ -12,21 +19,33 @@ const Comments = ({ blog }) => {
     dispatch(addCommentOnBlog(blog.id, comment));
   };
 
+  const margin = {
+    marginTop: "1.5em"
+  }
+
   return (
-    <div>
-      <h3>Comments</h3>
+    <div style={margin}>
+      <Typography variant="h4" component={"h2"}>
+        Comments
+      </Typography>
       <form onSubmit={handleAddComment}>
-        <input name="comment" />
-        <button type="submit">add comment</button>
+        <div>
+          <TextField label="Comment" name="comment" />
+        </div>
+        <Button variant="outlined" type="submit">
+          add comment
+        </Button>
       </form>
       {!comments || comments.length === 0 ? (
-        <p>no comments yet...</p>
+        <Typography>no comments yet...</Typography>
       ) : (
-        <ul>
+        <List sx={{ listStyleType: "disc", pl: 4 }}>
           {comments.map((comment) => (
-            <li key={comment.id}>{comment.content}</li>
+            <ListItem key={comment.id} sx={{ display: "list-item" }}>
+              <Typography>{comment.content}</Typography>
+            </ListItem>
           ))}
-        </ul>
+        </List>
       )}
     </div>
   );

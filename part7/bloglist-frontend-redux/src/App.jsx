@@ -5,13 +5,15 @@ import {
   Routes,
   Route
 } from "react-router-dom";
+import {
+  Container,
+} from "@mui/material";
 import UsersPage from "./components/UsersPage";
 import LoginPage from "./components/LoginPage";
 import Notification from "./components/Notification";
 import BlogsPage from "./components/BlogsPage";
 import Menu from "./components/Menu";
 import UserDetailsPage from "./components/UserDetailsPage";
-import "./App.css";
 import BlogDetailsPage from "./components/BlogDetailsPage";
 
 const App = () => {
@@ -23,14 +25,13 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <Container>
       <Notification />
       {user === null ? (
         <LoginPage />
       ) : (
         <div>
           <Menu />
-          <h1>Blogs</h1>
           <Routes>
             <Route path="/" element={<BlogsPage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -40,7 +41,7 @@ const App = () => {
           </Routes>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 

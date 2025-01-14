@@ -1,6 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { Link, useMatch } from "react-router-dom";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  Typography
+} from "@mui/material";
 import { initializeUsers } from "../reducers/userReducer";
 
 const UserDetailsPage = () => {
@@ -18,25 +24,33 @@ const UserDetailsPage = () => {
   }, [currentUser]);
 
   if (!user) {
-    return <p>user does not exist!</p>;
+    return <Typography>user does not exist!</Typography>;
+  }
+
+  const margin = {
+    marginTop: "1em"
   }
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
+      <Typography variant="h3" component={"h1"}>
+        {user.name}
+      </Typography>
+      <Typography variant="h6" component={"h2"} style={margin}>
+        Added blogs
+      </Typography>
       {user.blogs.length === 0 ? (
-        <p>no blogs found...</p>
+        <Typography>no blogs found...</Typography>
       ) : (
-        <ul>
+        <List>
           {user.blogs.map((blog) => (
-            <li key={blog.id}>
-              <Link to={`/blogs/${blog.id}`}>
-                {blog.title}
-              </Link>
-            </li>
+            <ListItem key={blog.id}>
+              <ListItemText>
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+              </ListItemText>
+            </ListItem>
           ))}
-        </ul>
+        </List>
       )}
     </div>
   );

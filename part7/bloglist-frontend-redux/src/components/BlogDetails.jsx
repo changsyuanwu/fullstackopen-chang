@@ -1,4 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
+import {
+  Typography,
+  Button,
+} from "@mui/material";
 import { deleteBlog, likeBlog } from "../reducers/blogReducer";
 
 const BlogDetails = ({ blog }) => {
@@ -16,12 +20,12 @@ const BlogDetails = ({ blog }) => {
 
   return (
     <div className="blog-details">
-      <p>{blog.url}</p>
-      <p>likes: {blog.likes}</p>
-      <button onClick={handleLike}>like</button>
-      {blog.user ? <p>added by {blog.user.name}</p> : null}
+      <Typography variant="subtitle1">{blog.url}</Typography>
+      <Typography variant="subtitle1">likes: {blog.likes}</Typography>
+      <Button variant="outlined" onClick={handleLike}>like</Button>
+      {blog.user ? <Typography variant="body1">added by {blog.user.name}</Typography> : null}
       {user.id === blog.user.id ? (
-        <button onClick={handleRemove}>remove</button>
+        <Button onClick={handleRemove}>remove</Button>
       ) : null}
     </div>
   );

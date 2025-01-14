@@ -1,5 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import {
+  Typography
+} from "@mui/material";
 import { initializeUsers } from "../reducers/userReducer";
 import UsersTable from "./UsersTable";
 
@@ -16,10 +19,10 @@ const UsersPage = () => {
 
   return (
     <div>
-      <h2>Users</h2>
+      <Typography variant="h3" component={"h1"}>Users</Typography>
       {
         users.length === 0 ?
-          <p>no users found...</p> :
+          <Typography>no users found...</Typography> :
           <UsersTable />
       }
     </div>

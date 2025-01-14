@@ -1,22 +1,21 @@
 import { Link } from "react-router-dom";
+import {
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 
 const Blog = ({ blog }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   return (
-    <div className="blog" style={blogStyle}>
-      <div>
-        <Link to={`/blogs/${blog.id}`}>
-          {blog.title} by {blog.author}
-        </Link>
-      </div>
-    </div>
+    <ListItem disablePadding>
+      <ListItemButton component={Link} to={`/blogs/${blog.id}`}>
+        <ListItemText>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} by {blog.author}
+          </Link>
+        </ListItemText>
+      </ListItemButton>
+    </ListItem>
   );
 };
 

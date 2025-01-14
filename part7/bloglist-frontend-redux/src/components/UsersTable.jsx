@@ -1,5 +1,14 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
+} from "@mui/material";
 
 const UsersTable = () => {
   const users = useSelector((state) => {
@@ -8,28 +17,31 @@ const UsersTable = () => {
 
   const usersTableStyle = {
     width: "25%",
-    textAlign: "center",
   }
 
   return (
-    <table style={usersTableStyle}>
-      <tbody>
-        <tr>
-          <th>Name</th>
-          <th>Blogs created</th>
-        </tr>
-        {users.map((user) => (
-          <tr key={user.id}>
-            <td>
-              <Link to={`/users/${user.id}`}>
-                {user.username}
-              </Link>
-            </td>
-            <td>{user.blogs.length}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <TableContainer component={Paper}>
+      <Table style={usersTableStyle}>
+        <TableHead>
+          <TableRow>
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="left">Blogs created</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell align="left">
+                <Link to={`/users/${user.id}`}>
+                  {user.username}
+                </Link>
+              </TableCell>
+              <TableCell align="left">{user.blogs.length}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
