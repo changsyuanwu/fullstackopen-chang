@@ -67,3 +67,20 @@ export const deleteBlog = (id) => {
     }
   };
 };
+
+export const addCommentOnBlog = (id, comment) => {
+  return async (dispatch, getState) => {
+    try {
+      const state = getState();
+      const blog = state.blogs.find((b) => b.id === id);
+      const blogObject = {
+        ...blog,
+        comments: blog.comments.concat(comment),
+      };
+      const updatedBlog = await blogService.update(id, blogObject);
+      dispatch(updateBlog(updatedBlog));
+    } catch (exception) {
+      console.log(exception);
+    }
+  };
+};
