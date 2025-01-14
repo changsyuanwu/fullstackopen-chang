@@ -68,16 +68,13 @@ export const deleteBlog = (id) => {
   };
 };
 
-export const addCommentOnBlog = (id, comment) => {
-  return async (dispatch, getState) => {
+export const addCommentOnBlog = (id, commentContent) => {
+  return async (dispatch) => {
     try {
-      const state = getState();
-      const blog = state.blogs.find((b) => b.id === id);
-      const blogObject = {
-        ...blog,
-        comments: blog.comments.concat(comment),
-      };
-      const updatedBlog = await blogService.update(id, blogObject);
+      const updatedBlog = await blogService.addComment(
+        id,
+        { content: commentContent },
+      );
       dispatch(updateBlog(updatedBlog));
     } catch (exception) {
       console.log(exception);

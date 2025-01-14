@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useMatch } from "react-router-dom";
 import { initializeBlogs } from "../reducers/blogReducer";
 import BlogDetails from "./BlogDetails";
-import CommentList from "./CommentList";
+import Comments from "./Comments";
 
 const BlogDetailsPage = () => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const BlogDetailsPage = () => {
       <h2>{blog.title}</h2>
       <p>{blog.author}</p>
       <BlogDetails blog={blog} />
-      <CommentList comments={blog.comments} />
+      <Comments blog={blog} />
     </div>
   );
 };
