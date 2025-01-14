@@ -7,6 +7,16 @@ Content-Type: application/json
   "password": "wow password5"
 }
 
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "chang",
+  "name": "chang",
+  "password": "changpassword"
+}
+
 ### Now an invalid user
 POST http://localhost:3003/api/users
 Content-Type: application/json

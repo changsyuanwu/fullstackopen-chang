@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { commentSchema } = require("./comment");
 
 const blogSchema = new mongoose.Schema({
   title: {
@@ -18,6 +19,10 @@ const blogSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  comments: {
+    type: [commentSchema],
+    default: [],
+  }
 });
 
 blogSchema.set("toJSON", {
