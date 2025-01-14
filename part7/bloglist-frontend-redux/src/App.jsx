@@ -13,6 +13,7 @@ import BlogsPage from "./components/BlogsPage";
 import Menu from "./components/Menu";
 import UserDetailsPage from "./components/UserDetailsPage";
 import "./App.css";
+import BlogDetailsPage from "./components/BlogDetailsPage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ const App = () => {
             <Route path="/" element={<BlogsPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/users/:id" element={<UserDetailsPage />} />
+            <Route path="blogs/:id" element={<BlogDetailsPage />} />
             <Route path="/users" element={<UsersPage />} />
           </Routes>
         </div>

@@ -1,12 +1,15 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { useMatch } from "react-router-dom";
+import { Link, useMatch } from "react-router-dom";
 import { initializeUsers } from "../reducers/userReducer";
 
 const UserDetailsPage = () => {
   const dispatch = useDispatch();
+  const match = useMatch("/users/:id");
   const currentUser = useSelector((state) => state.currentUser);
-  const users = useSelector((state) => state.users);
+  const user = useSelector((state) =>
+    state.users.find((user) => user.id === match.params.id)
+  );
 
   useEffect(() => {
     if (currentUser) {
@@ -14,11 +17,6 @@ const UserDetailsPage = () => {
     }
   }, [currentUser]);
 
-  const match = useMatch("/users/:id");
-  const user = match
-    ? users.find((user) => user.id === match.params.id)
-    : null;
-  console.log(match.params, user);
   if (!user) {
     return <p>user does not exist!</p>;
   }
@@ -32,7 +30,11 @@ const UserDetailsPage = () => {
       ) : (
         <ul>
           {user.blogs.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
+            <li key={blog.id}>
+              <Link to={`/blogs/${blog.id}`}>
+                {blog.title}
+              </Link>
+            </li>
           ))}
         </ul>
       )}
