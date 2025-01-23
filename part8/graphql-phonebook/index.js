@@ -40,7 +40,6 @@ const typeDefs = `
   type Person {
     name: String!
     phone: String
-
     address: Address!
     id: ID!
   }
