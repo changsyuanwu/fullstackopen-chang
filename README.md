@@ -1,6 +1,6 @@
 # [Full Stack Open](https://fullstackopen.com/en/)
 
-This repository is a collection of exercises and examples I created while following the Full Stack Open course.
+This repository is a collection of exercises and examples I created while completing the Full Stack Open course.
 
 ## About Full Stack Open
 
