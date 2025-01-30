@@ -3,6 +3,7 @@ import { useState } from "react";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import { ALL_PERSONS } from "./queries";
+import PhoneForm from "./components/PhoneForm";
 
 // eslint-disable-next-line react/prop-types
 const Notify = ({ errorMessage }) => {
@@ -30,8 +31,9 @@ const App = () => {
   return (
     <div>
       <Notify errorMessage={errorMessage} />
-      <PersonForm setError={notify} />
       <Persons persons={result.data.allPersons} />
+      <PersonForm setError={notify} />
+      <PhoneForm />
     </div>
   );
 };

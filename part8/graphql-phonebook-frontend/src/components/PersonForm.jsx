@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import {
@@ -5,7 +6,7 @@ import {
   CREATE_PERSON,
 } from "../queries";
 
-const PersonForm = ({ setError}) => {
+const PersonForm = ({ setError }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [street, setStreet] = useState("");
