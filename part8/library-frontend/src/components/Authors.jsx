@@ -1,9 +1,13 @@
 /* eslint-disable react/prop-types */
-const Authors = (props) => {
-  if (!props.show) {
-    return null
+import { useQuery } from "@apollo/client";
+import { ALL_AUTHORS } from "../queries";
+
+const Authors = () => {
+  const result = useQuery(ALL_AUTHORS);
+
+  if (result.loading) {
+    return <div>loading...</div>
   }
-  const authors = []
 
   return (
     <div>
@@ -15,7 +19,7 @@ const Authors = (props) => {
             <th>born</th>
             <th>books</th>
           </tr>
-          {authors.map((a) => (
+          {result.data.allAuthors.map((a) => (
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
