@@ -63,8 +63,13 @@ const resolvers = {
   Query: {
     personCount: async () => Person.collection.countDocuments(),
     allPersons: async (root, args) => {
-      // filters missing
-      return Person.find({});
+      if (!args.phone) {
+        return Person.find({});
+      }
+
+      // If args.phone is 'YES', return all persons with phone numbers
+      // If args.phone is 'NO', return all persons without phone numbers
+      return Person.find({ phone: { $exists: args.phone === 'YES' } });
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
   },
