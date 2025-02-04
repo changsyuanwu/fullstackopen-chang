@@ -9,6 +9,7 @@ export const ALL_PERSONS = gql`
     }
   }
 `;
+
 export const FIND_PERSON = gql`
   query findPersonByName($nameToSearch: String!) {
     findPerson(name: $nameToSearch) {
