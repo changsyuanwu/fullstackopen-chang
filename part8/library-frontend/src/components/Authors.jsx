@@ -29,7 +29,7 @@ const Authors = () => {
           ))}
         </tbody>
       </table>
-      <SetBirthYear />
+      <SetBirthYear authors={result.data.allAuthors} />
     </div>
   )
 }
