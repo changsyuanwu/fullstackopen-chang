@@ -2,4 +2,4 @@
 
 node_modules
 *.env
-part7/ultimate-hooks/.vite/
+.vite
