@@ -52,11 +52,22 @@ const resolvers = {
     },
   },
   Mutation: {
-    addPerson: async (root, args) => {
+    addPerson: async (root, args, context) => {
       const person = new Person({ ...args });
+      const currentUser = context.currentUser;
+
+      if (!currentUser) {
+        throw new GraphQLError("Not authenticated", {
+          extensions: {
+            code: "UNAUTHENTICATED",
+          },
+        });
+      }
 
       try {
         await person.save();
+        currentUser.friends = currentUser.friends.concat(person);
+        await currentUser.save();
       } catch (error) {
         throw new GraphQLError("Saving person failed", {
           extensions: {
@@ -120,6 +131,28 @@ const resolvers = {
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
     },
+    addAsFriend: async (root, args, context) => {
+      const currentUser = context.currentUser;
+
+      if (!currentUser) {
+        throw new GraphQLError('invalid credentials', {
+          extensions: {
+            code: "UNAUTHENTICATED",
+          }
+        });
+      }
+
+      const isExistingFriend = (person) =>
+        currentUser.friends.map(f => f._id.toString().includes(person._id.toString()));
+
+      const person = await Person.findOne({ name: args.name });
+      if (!isExistingFriend(person)) {
+        currentUser.friends = currentUser.friends.concat(person);
+        await currentUser.save();
+      }
+
+      return currentUser;
+    }
   },
 };
 
@@ -137,7 +170,7 @@ startStandaloneServer(server, {
         auth.substring(auth.indexOf(" ") + 1),
         process.env.JWT_SECRET
       );
-      
+
       const currentUser = await User.findById(decodedToken.id).populate(
         "friends"
       );
