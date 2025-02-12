@@ -72,7 +72,16 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
+      const currentUser = context.currentUser;
+      if (!currentUser) {
+        throw new GraphQLError("Not authenticated", {
+          extensions: {
+            code: "UNAUTHENTICATED",
+          },
+        });
+      }
+
       const book = new Book({ ...args });
 
       try {
@@ -94,6 +103,8 @@ const resolvers = {
 
         book.author = existingAuthor.id;
         await book.save();
+        // Update the author to the author object so we can query the fields using GQL
+        book.author = existingAuthor;
       } catch (error) {
         throw new GraphQLError("Saving book failed", {
           extensions: {
@@ -106,7 +117,16 @@ const resolvers = {
 
       return book;
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
+      const currentUser = context.currentUser;
+      if (!currentUser) {
+        throw new GraphQLError("Not authenticated", {
+          extensions: {
+            code: "UNAUTHENTICATED",
+          },
+        });
+      }
+
       const author = await Author.findOne({ name: args.name });
 
       if (!author) {
