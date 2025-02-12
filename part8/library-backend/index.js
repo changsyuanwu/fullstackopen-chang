@@ -5,8 +5,10 @@ const { GraphQLError } = require("graphql");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
+const bcrypt = require("bcrypt");
 const Author = require("./models/author");
 const Book = require("./models/book");
+const User = require("./models/user");
 const typeDefs = require("./typedefs");
 
 require("@dotenvx/dotenvx").config();
@@ -65,6 +67,9 @@ const resolvers = {
       }
     },
     allAuthors: async () => Author.find({}),
+    me: async (root, args, context) => {
+      return context.currentUser;
+    }
   },
   Mutation: {
     addBook: async (root, args) => {
@@ -75,17 +80,16 @@ const resolvers = {
 
         if (!existingAuthor) {
           const author = new Author({ name: args.author });
-          try {
-            existingAuthor = await author.save();
-          } catch (error) {
-            throw new GraphQLError("Creating author failed", {
-              extensions: {
-                code: "BAD_USER_INPUT",
-                invalidArgs: args.author,
-                error,
-              },
+          existingAuthor = await author.save()
+            .catch(error => {
+              throw new GraphQLError("Creating author failed", {
+                extensions: {
+                  code: "BAD_USER_INPUT",
+                  invalidArgs: args.author,
+                  error,
+                },
+              });
             });
-          }
         }
 
         book.author = existingAuthor.id;
@@ -128,6 +132,55 @@ const resolvers = {
         });
       }
       return author;
+    },
+    createUser: async (root, args) => {
+      const passwordHash = await bcrypt.hash(args.password, 10);
+
+      const user = new User({
+        username: args.username,
+        favouriteGenre: args.favouriteGenre,
+        passwordHash,
+      });
+
+      return user.save()
+        .catch(error => {
+          throw new GraphQLError("Creating new user failed", {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              error,
+            }
+          });
+        });
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username });
+      if (!user) {
+        throw new GraphQLError("User not found", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.username,
+          },
+        });
+      }
+
+      const passwordCorrect = await bcrypt.compare(args.password, user.passwordHash);
+      if (!passwordCorrect) {
+        throw new GraphQLError("Wrong password", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.password,
+          },
+        });
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      };
+
+      return {
+        value: jwt.sign(userForToken, process.env.JWT_SECRET),
+      };
     }
   },
 };
@@ -138,7 +191,19 @@ const server = new ApolloServer({
 });
 
 startStandaloneServer(server, {
-  listen: { port: 4000 },
+  listen: { port: 4001 },
+  context: async ({ req, res }) => {
+      const auth = req ? req.headers.authorization : null;
+      if (auth && auth.startsWith("Bearer ")) {
+        const decodedToken = jwt.verify(
+          auth.substring(auth.indexOf(" ") + 1),
+          process.env.JWT_SECRET
+        );
+
+        const currentUser = await User.findById(decodedToken.id);
+        return { currentUser };
+      }
+    },
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
 });
