@@ -53,7 +53,17 @@ const resolvers = {
 
         if (!existingAuthor) {
           const author = new Author({ name: args.author });
-          existingAuthor = await author.save();
+          try {
+            existingAuthor = await author.save();
+          } catch (error) {
+            throw new GraphQLError("Creating author failed", {
+              extensions: {
+                code: "BAD_USER_INPUT",
+                invalidArgs: args.author,
+                error,
+              },
+            });
+          }
         }
 
         book.author = existingAuthor.id;
@@ -62,6 +72,7 @@ const resolvers = {
         throw new GraphQLError("Saving book failed", {
           extensions: {
             code: "BAD_USER_INPUT",
+            invalidArgs: args.title,
             error,
           },
         });
@@ -71,6 +82,16 @@ const resolvers = {
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name });
+
+      if (!author) {
+        throw new GraphQLError("Author not found", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.name,
+          },
+        });
+      }
+
       author.born = args.setBornTo;
 
       try {
@@ -79,6 +100,7 @@ const resolvers = {
         throw new GraphQLError("Saving author born year failed", {
           extensions: {
             code: "BAD_USER_INPUT",
+            invalidArgs: args.setBornTo,
             error,
           },
         });
