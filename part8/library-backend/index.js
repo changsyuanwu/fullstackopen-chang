@@ -1,7 +1,28 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v7: uuidv7 } = require("uuid");
+const { GraphQLError } = require("graphql");
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+const Author = require("./models/author");
+const Book = require("./models/book");
 const typeDefs = require("./typedefs");
+
+require("@dotenvx/dotenvx").config();
+
+const MONGODB_URI = process.env.MONGODB_ATLAS_URL;
+
+console.log("connecting to", MONGODB_URI);
+
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("error connection to MongoDB:", error.message);
+  });
 
 let authors = [
   {
@@ -95,11 +116,6 @@ let books = [
   },
 ];
 
-/*
-  you can remove the placeholder query once your first one has been implemented
-*/
-
-
 
 const resolvers = {
   Author: {
@@ -108,33 +124,35 @@ const resolvers = {
     },
   },
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      let filteredBooks = books;
-
-      if (args.author) {
-        filteredBooks = filteredBooks.filter((b) => b.author === args.author);
-      }
-
-      if (args.genre) {
-        filteredBooks = filteredBooks.filter((b) =>
-          b.genres.includes(args.genre)
-        );
-      }
-
-      return filteredBooks;
+    bookCount: async => Book.collection.countDocuments(),
+    authorCount: async () => Author.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      return Book.find({});
     },
-    allAuthors: () => authors,
+    allAuthors: async () => Author.find({}),
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuidv7() };
-      books = books.concat(book);
+    addBook: async (root, args) => {
+      const book = new Book({ ...args });
 
-      // Add book author to authors if they dont exist yet
-      if (!authors.find((a) => a.name === book.author)) {
-        authors = authors.concat({ name: book.author, id: uuidv7() });
+      try {
+        let existingAuthor = await Author.findOne({ name: args.author });
+
+        if (!existingAuthor) {
+          const author = new Author({ name: args.author });
+          existingAuthor = await author.save();
+        }
+
+        book.author = existingAuthor.id;
+        await book.save();
+      } catch (error) {
+        throw new GraphQLError("Saving book failed", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.title,
+            error,
+          },
+        });
       }
 
       return book;
