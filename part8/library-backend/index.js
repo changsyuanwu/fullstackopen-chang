@@ -34,13 +34,35 @@ const resolvers = {
     bookCount: async => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      if (!args.genre) {
+      if (!args.genre && !args.author) {
         return Book.find({}).populate("author");
       }
 
-      return Book
-        .find({ genres: { $in: args.genre } })
-        .populate("author");
+      if (args.genre && args.author) {
+        const author = await Author.findOne({ name: args.author });
+        if (!author) {
+          return [];
+        }
+
+        return Book
+          .find({
+            genres: { $in: args.genre },
+            author: author.id
+          }).
+          populate("author");
+      }
+
+      if (args.genre) {
+        return Book.find({ genres: { $in: args.genre } }).populate("author");
+      }
+
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author });
+        if (!author) {
+          return [];
+        }
+        return Book.find({ author: author._id }).populate("author");
+      }
     },
     allAuthors: async () => Author.find({}),
   },
