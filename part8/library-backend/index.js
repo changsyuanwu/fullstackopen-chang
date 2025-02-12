@@ -1,6 +1,7 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { v7: uuidv7 } = require("uuid");
+const typeDefs = require("./typedefs");
 
 let authors = [
   {
@@ -98,43 +99,7 @@ let books = [
   you can remove the placeholder query once your first one has been implemented
 */
 
-const typeDefs = `
-  type Author {
-    name: String!
-    id: ID!
-    born: Int
-    bookCount: Int
-  }
 
-  type Book {
-    title: String!
-    published: Int!
-    author: String!
-    id: ID!
-    genres: [String!]
-  }
-
-  type Query {
-    bookCount: Int!
-    authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
-    allAuthors: [Author!]!
-  }
-
-  type Mutation {
-    addBook(
-      title: String!
-      published: Int!
-      author: String!
-      genres: [String!]
-    ): Book
-
-    editAuthor(
-      name: String!
-      setBornTo: Int!
-    ): Author
-  }
-`;
 
 const resolvers = {
   Author: {
