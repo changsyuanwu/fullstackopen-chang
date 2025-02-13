@@ -4,6 +4,7 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import { ALL_PERSONS } from "./queries";
 import PhoneForm from "./components/PhoneForm";
+import LoginForm from "./components/LoginForm";
 
 // eslint-disable-next-line react/prop-types
 const Notify = ({ errorMessage }) => {
@@ -15,6 +16,7 @@ const Notify = ({ errorMessage }) => {
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [token, setToken] = useState(null);
   const result = useQuery(ALL_PERSONS);
 
   if (result.loading) {
@@ -27,6 +29,16 @@ const App = () => {
       setErrorMessage(null);
     }, 10000);
   };
+
+  if (!token) {
+    return (
+      <div>
+        <Notify errorMessage={errorMessage} />
+        <h2>Login</h2>
+        <LoginForm setToken={setToken} setError={notify} />
+      </div>
+    );
+  }
 
   return (
     <div>
