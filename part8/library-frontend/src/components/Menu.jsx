@@ -1,5 +1,7 @@
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
-const Menu = () => {
+
+const Menu = ({ token }) => {
   const padding = {
     padding: 5,
   };
@@ -12,9 +14,15 @@ const Menu = () => {
       <Link style={padding} to="/books">
         books
       </Link>
-      <Link style={padding} to="/add">
-        add
-      </Link>
+      {token ? (
+        <Link style={padding} to="/add">
+          add book
+        </Link>
+      ) : (
+        <Link style={padding} to="/login">
+          login
+        </Link>
+      )}
     </div>
   );
 }
