@@ -6,7 +6,11 @@ import BooksTable from "./BooksTable";
 const Books = () => {
   const [genre, setGenre] = useState(null);
 
-  const result = useQuery(ALL_BOOKS);
+  const result = useQuery(ALL_BOOKS, {
+    variables: {
+      genre,
+    },
+  });
 
   if (result.loading) {
     return <div>loading...</div>;
@@ -16,7 +20,7 @@ const Books = () => {
     <div>
       <h2>books</h2>
       {genre && <p>in genre <b>{genre}</b></p>}
-      <BooksTable books={result.data.allBooks} genre={genre} />
+      <BooksTable books={result.data.allBooks} />
       {result.data.allBooks.length > 0 && (
         <div>
           {Array.from(
