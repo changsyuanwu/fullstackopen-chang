@@ -1,13 +1,21 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import {
+  useApolloClient,
+  useQuery,
+  useSubscription,
+} from "@apollo/client";
 import {
   useState,
   useEffect,
  } from "react";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
-import { ALL_PERSONS } from "./queries";
+import {
+  ALL_PERSONS,
+  PERSON_ADDED
+} from "./queries";
 import PhoneForm from "./components/PhoneForm";
 import LoginForm from "./components/LoginForm";
+import { updateCache } from "./utils";
 
 // eslint-disable-next-line react/prop-types
 const Notify = ({ errorMessage }) => {
@@ -29,6 +37,18 @@ const App = () => {
       setToken(userToken);
     }
   }, []);
+
+  useSubscription(PERSON_ADDED, {
+    onData: ({ data, client }) => {
+      const addedPerson = data.data.personAdded;
+      notify(`${addedPerson.name} added`);
+      updateCache(
+        client.cache,
+        { query: ALL_PERSONS },
+        addedPerson,
+      )
+    }
+  });
 
   if (result.loading) {
     return <div>loading...</div>;
