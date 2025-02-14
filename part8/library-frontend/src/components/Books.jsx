@@ -4,8 +4,9 @@ import { ALL_BOOKS } from "../queries";
 import BooksTable from "./BooksTable";
 
 const Books = () => {
-  const result = useQuery(ALL_BOOKS);
   const [genre, setGenre] = useState(null);
+
+  const result = useQuery(ALL_BOOKS);
 
   if (result.loading) {
     return <div>loading...</div>;

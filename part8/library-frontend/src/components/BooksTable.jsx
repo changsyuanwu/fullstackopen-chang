@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 const BooksTable = ({ books, genre }) => {
-  
+
   if (!books) {
     return null;
   }
