@@ -10,12 +10,13 @@ const resolvers = {
     personCount: async () => Person.collection.countDocuments(),
     allPersons: async (root, args) => {
       if (!args.phone) {
-        return Person.find({});
+        return Person.find({}).populate("friendOf");
       }
 
       // If args.phone is 'YES', return all persons with phone numbers
       // If args.phone is 'NO', return all persons without phone numbers
-      return Person.find({ phone: { $exists: args.phone === "YES" } });
+      return Person.find({ phone: { $exists: args.phone === "YES" } })
+        .populate("friendOf");
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
     me: async (root, args, context) => {
@@ -49,6 +50,7 @@ const resolvers = {
       }
 
       try {
+        person.friendOf.push(currentUser.id);
         await person.save();
         currentUser.friends = currentUser.friends.concat(person);
         await currentUser.save();
