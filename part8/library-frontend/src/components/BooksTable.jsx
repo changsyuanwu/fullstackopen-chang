@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-const BooksTable = ({ books, genre }) => {
+const BooksTable = ({ books }) => {
 
   if (!books) {
     return null;
@@ -15,7 +15,6 @@ const BooksTable = ({ books, genre }) => {
           <th>published</th>
         </tr>
         {books
-          .filter((b) => !genre || b.genres.includes(genre)) // If no genre is selected, show all books
           .map((book) => (
             <tr key={book.title}>
               <td>{book.title}</td>
