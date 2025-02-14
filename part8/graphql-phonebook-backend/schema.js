@@ -13,6 +13,7 @@ const typeDefs = `
     name: String!
     phone: String
     address: Address!
+    friendOf: [User!]!
     id: ID!
   }
 
@@ -24,6 +25,10 @@ const typeDefs = `
 
   type Token {
     value: String!
+  }
+
+  type Subscription {
+    personAdded: Person!
   }
 
   type Query {
