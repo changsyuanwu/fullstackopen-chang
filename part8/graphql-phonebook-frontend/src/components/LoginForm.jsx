@@ -17,7 +17,7 @@ const LoginForm = ({ setError, setToken }) => {
     if (result.data) {
       const token = result.data.login.value;
       setToken(token);
-      localStorage.setItem("phonebook-user-token", token);
+      window.localStorage.setItem("phonebook-user-token", token);
     }
   }, [result.data]);
 
