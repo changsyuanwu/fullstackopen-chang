@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 import { ALL_BOOKS } from "../queries";
+import BooksTable from "./BooksTable";
 
 const Books = () => {
   const result = useQuery(ALL_BOOKS);
@@ -14,24 +15,7 @@ const Books = () => {
     <div>
       <h2>books</h2>
       {genre && <p>in genre <b>{genre}</b></p>}
-      <table>
-        <tbody>
-          <tr>
-            <th>title</th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {result.data.allBooks
-            .filter((b) => !genre || b.genres.includes(genre)) // If no genre is selected, show all books
-            .map((book) => (
-              <tr key={book.title}>
-                <td>{book.title}</td>
-                <td>{book.author.name}</td>
-                <td>{book.published}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <BooksTable books={result.data.allBooks} genre={genre} />
       {result.data.allBooks.length > 0 && (
         <div>
           {Array.from(
