@@ -1,5 +1,4 @@
 const { ApolloServer } = require("@apollo/server");
-const { startStandaloneServer } = require("@apollo/server/standalone");
 const { expressMiddleware } = require("@apollo/server/express4");
 const {
   ApolloServerPluginDrainHttpServer,
