@@ -10,7 +10,7 @@ const User = require("./models/user");
 const resolvers = {
   Author: {
     bookCount: async (root) => {
-      return await Book.find({ author: root.id }).countDocuments();
+      return root.authoredBooks.length;
     },
   },
   Query: {
@@ -45,7 +45,9 @@ const resolvers = {
         return Book.find({ author: author._id }).populate("author");
       }
     },
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => {
+      return Author.find({})
+    },
     me: async (root, args, context) => {
       return context.currentUser;
     },
@@ -67,9 +69,14 @@ const resolvers = {
         let existingAuthor = await Author.findOne({ name: args.author });
 
         if (!existingAuthor) {
-          const author = new Author({ name: args.author });
-          existingAuthor = await author.save().catch((error) => {
-            throw new GraphQLError("Creating author failed", {
+          existingAuthor = new Author({ name: args.author });
+        }
+
+        existingAuthor.authoredBooks = existingAuthor.authoredBooks.concat(book.id);
+
+        await existingAuthor.save()
+          .catch((error) => {
+            throw new GraphQLError("Saving author failed", {
               extensions: {
                 code: "BAD_USER_INPUT",
                 invalidArgs: args.author,
@@ -77,7 +84,6 @@ const resolvers = {
               },
             });
           });
-        }
 
         book.author = existingAuthor.id;
         await book.save();
