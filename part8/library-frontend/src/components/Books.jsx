@@ -1,8 +1,40 @@
-import { useQuery } from "@apollo/client";
-import { ALL_BOOKS } from "../queries";
+import {
+  useQuery,
+  useSubscription
+} from "@apollo/client";
+import { useState } from "react";
+import BooksTable from "./BooksTable";
+import {
+  BOOK_ADDED,
+  ALL_BOOKS
+} from "../queries";
+import { updateCache } from "../utils";
 
 const Books = () => {
-  const result = useQuery(ALL_BOOKS);
+  const [genre, setGenre] = useState(null);
+
+  const result = useQuery(ALL_BOOKS, {
+    variables: {
+      genre,
+    },
+  });
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded;
+      window.alert(`Book "${addedBook.title}" added`);
+      updateCache(
+        client.cache,
+        {
+          query: ALL_BOOKS,
+          variables: {
+            genre
+          },
+        },
+        addedBook
+      );
+    },
+  });
 
   if (result.loading) {
     return <div>loading...</div>;
@@ -11,23 +43,18 @@ const Books = () => {
   return (
     <div>
       <h2>books</h2>
-
-      <table>
-        <tbody>
-          <tr>
-            <th>title</th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {result.data.allBooks.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
-            </tr>
+      {genre && <p>in genre <b>{genre}</b></p>}
+      <BooksTable books={result.data.allBooks} />
+      {result.data.allBooks.length > 0 && (
+        <div>
+          {Array.from(
+            new Set(result.data.allBooks.flatMap((b) => b.genres))
+          ).map((g) => (
+            <button key={g} onClick={() => setGenre(g)}>{g}</button>
           ))}
-        </tbody>
-      </table>
+          <button onClick={() => setGenre(null)}>all genres</button>
+        </div>
+      )}
     </div>
   );
 };
