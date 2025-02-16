@@ -3,6 +3,8 @@ const { expressMiddleware } = require("@apollo/server/express4");
 const {
   ApolloServerPluginDrainHttpServer,
 } = require("@apollo/server/plugin/drainHttpServer");
+const { WebSocketServer } = require("ws");
+const { useServer } = require("graphql-ws/use/ws");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const express = require("express");
 const cors = require("cors");
@@ -37,12 +39,27 @@ const start = async () => {
   const app = express();
   const httpServer = http.createServer(app);
 
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/",
+  });
+
   const schema = makeExecutableSchema({ typeDefs, resolvers });
+  const serverCleanup = useServer({ schema }, wsServer);
 
   const server = new ApolloServer({
     schema,
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
     ],
   });
 
@@ -60,8 +77,7 @@ const start = async () => {
             auth.substring(auth.indexOf(" ") + 1),
             process.env.JWT_SECRET
           );
-          const currentUser = await User.findById(decodedToken.id)
-            .populate("friends");
+          const currentUser = await User.findById(decodedToken.id);
           return { currentUser };
         }
       },
