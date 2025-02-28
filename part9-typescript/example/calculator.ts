@@ -19,6 +19,7 @@ try {
 } catch (error: unknown) {
   let errorMessage = "Something went wrong: ";
   if (error instanceof Error) {
+    // the type is narrowed here so we can refer to error.message
     errorMessage += error.message;
   }
   console.log(errorMessage);
