@@ -8,9 +8,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ts-node": "ts-node"
+    "ts-node": "ts-node",
+    "multiply": "ts-node multiplier.ts",
+    "calculate": "ts-node calculator.ts"
   },
   "devDependencies": {
+    "@types/node": "^22.13.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
