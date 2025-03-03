@@ -29,13 +29,18 @@ function calculateBmi(height: number, weight: number): string {
   }
 }
 
-try {
-  const { value1, value2 } = parseBmiArguments(process.argv);
-  console.log(calculateBmi(value1, value2));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
+// if used from command line, parse the arguments
+if (require.main === module) {
+  try {
+    const { value1, value2 } = parseBmiArguments(process.argv);
+    console.log(calculateBmi(value1, value2));
+  } catch (error: unknown) {
+    let errorMessage = "Something bad happened.";
+    if (error instanceof Error) {
+      errorMessage += " Error: " + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
+
+export { calculateBmi };
