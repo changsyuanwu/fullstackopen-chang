@@ -32,10 +32,10 @@ const parseExerciseArguments = (args: Array<string>): ExerciseInputValues => {
   };
 };
 
-function calculateExercises(
+export const calculateExercises = (
   dailyExerciseHours: Array<number>,
   target: number
-): ExerciseResult {
+): ExerciseResult => {
   const periodLength = dailyExerciseHours.length;
   const trainingDays = dailyExerciseHours.filter((hours) => hours > 0).length;
   const success = dailyExerciseHours.every((hours) => hours >= target);
@@ -70,7 +70,7 @@ function calculateExercises(
     target,
     average,
   };
-}
+};
 
 try {
   const { target, dailyExerciseHours } = parseExerciseArguments(process.argv);
