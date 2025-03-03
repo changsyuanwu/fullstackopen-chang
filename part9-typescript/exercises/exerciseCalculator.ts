@@ -18,18 +18,18 @@ const parseExerciseArguments = (args: Array<string>): ExerciseInputValues => {
   if (isNaN(Number(args[2]))) throw new Error("Provided values were not numbers!");
 
   const target = Number(args[2]);
-  const dailyExerciseHours: Array<number> = []
+  const dailyExerciseHours: Array<number> = [];
 
   for (let i = 3; i < args.length; i++) {
     if (isNaN(Number(args[i])))
       throw new Error("Provided values were not numbers!");
-    dailyExerciseHours.push(Number(args[i]))
+    dailyExerciseHours.push(Number(args[i]));
   }
 
   return {
     target,
     dailyExerciseHours,
-  }
+  };
 };
 
 function calculateExercises(
