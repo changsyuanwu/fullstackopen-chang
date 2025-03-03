@@ -11,7 +11,7 @@ app.get("/ping", (_req, res) => {
 app.post("/calculate", (req, res) => {
   const { value1, value2, op } = req.body;
 
-  const result = calculator(value1, value2, op);
+  const result = calculator(Number(value1), Number(value2), op);
   res.send({ result });
 });
 
