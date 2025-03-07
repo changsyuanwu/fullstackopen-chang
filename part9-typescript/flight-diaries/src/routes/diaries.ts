@@ -1,5 +1,4 @@
-import express from "express";
-import { Response } from "express";
+import express, { Response } from "express";
 import { NonSensitiveDiaryEntry } from "../types";
 import diaryService from "../services/diaryService";
 
