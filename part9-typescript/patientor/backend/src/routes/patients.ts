@@ -1,6 +1,7 @@
 import express, { Response } from "express";
 import { NonSensitivePatient } from "../types";
 import patientService from "../services/patientService";
+import { toNewPatient } from "../utils";
 
 const router = express.Router();
 
@@ -10,8 +11,9 @@ router.get("/", (_req, res: Response<NonSensitivePatient[]>) => {
 
 router.post("/", (req, res) => {
   try {
-    const newPatient = patientService.addPatient(req.body);
-    res.json(newPatient);
+    const newPatient = toNewPatient(req.body);
+    const addedPatient = patientService.addPatient(newPatient);
+    res.json(addedPatient);
   } catch (error: unknown) {
     let errorMessage = "Something went wrong.";
     if (error instanceof Error) {
