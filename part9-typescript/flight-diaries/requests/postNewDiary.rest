@@ -17,3 +17,13 @@ content-type: application/json
     "weather": "rainy",
     "visibility": "poor"
 }
+
+### Bad post
+POST http://localhost:3000/api/diaries HTTP/1.1
+content-type: application/json
+
+{
+    "date": "2017-01-07",
+    "weather": "rai2ny",
+    "visibility": "poor"
+}
