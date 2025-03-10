@@ -32,6 +32,12 @@ const App = () => {
         "https://type-level-typescript.com/template-literal-types",
       kind: "background",
     },
+    {
+      name: "TypeScript in frontend",
+      exerciseCount: 10,
+      description: "a hard part",
+      kind: "basic",
+    },
   ];
 
   return (
