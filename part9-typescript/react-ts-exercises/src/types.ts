@@ -1,4 +1,4 @@
-export type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground;
+export type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground | CoursePartSpecial;
 
 interface CoursePartBase {
   name: string;
@@ -21,4 +21,9 @@ interface CoursePartGroup extends CoursePartBase {
 interface CoursePartBackground extends CoursePartWithDescription {
   backgroundMaterial: string;
   kind: "background";
+}
+
+interface CoursePartSpecial extends CoursePartWithDescription {
+  requirements: string[];
+  kind: "special";
 }

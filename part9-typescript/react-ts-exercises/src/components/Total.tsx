@@ -11,7 +11,7 @@ const Total = (props: TotalProps) => {
   );
 
   return (
-    <p>Number of exercises {totalExercises}</p>
+    <p>Total number of exercises {totalExercises}</p>
   )
 };
 

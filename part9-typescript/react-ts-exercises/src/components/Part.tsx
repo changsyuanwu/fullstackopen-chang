@@ -42,15 +42,18 @@ const Part = (props: PartProps) => {
           learn more at <a href={props.part.backgroundMaterial}>{props.part.backgroundMaterial}</a>
         </div>
       );
-    // case "special":
-    //   return (
-    //     <p>
-    //       {props.part.name}
-    //       {props.part.description}
-    //       {props.part.exerciseCount}
-    //       {props.part.requirements}
-    //     </p>
-    //   );
+    case "special":
+      return (
+        <div style={partStyle}>
+          <b>
+            {props.part.name} {props.part.exerciseCount}
+          </b>
+          <br />
+          <i>{props.part.description}</i>
+          <br />
+          required skills: {props.part.requirements.join(", ")}
+        </div>
+      );
   }
 };
 
