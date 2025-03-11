@@ -5,6 +5,12 @@ interface DiaryEntriesProps {
 }
 
 const DiaryEntries = (props: DiaryEntriesProps) => {
+
+  // Sort with most recent on top
+  props.diaryEntries.sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+  })
+
   return (
     <div>
       <h2>Diary entries</h2>
