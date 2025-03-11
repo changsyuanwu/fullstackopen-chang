@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Note } from "./types";
+import { createNote, getAllNotes } from "./services/noteService";
 
 const App = () => {
   const [newNote, setNewNote] = useState("");
@@ -9,18 +9,14 @@ const App = () => {
   ]);
 
   useEffect(() => {
-    axios.get<Note[]>("http://localhost:3001/notes").then((response) => {
-      setNotes(response.data);
-    });
+    getAllNotes().then((initialNotes) => setNotes(initialNotes));
   }, []);
 
   const noteCreation = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    axios
-      .post<Note>("http://localhost:3001/notes", { content: newNote })
-      .then((response) => {
-        setNotes(notes.concat(response.data));
-      });
+    createNote({ content: newNote }).then((note) => {
+      setNotes(notes.concat(note));
+    });
     setNewNote("");
   };
 
