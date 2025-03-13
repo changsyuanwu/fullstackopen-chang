@@ -5,6 +5,9 @@ import express, {
 } from "express";
 import { z } from "zod";
 import {
+  Entry,
+  NewEntry,
+  newEntrySchema,
   NewPatient,
   newPatientSchema,
   NonSensitivePatient,
@@ -23,9 +26,33 @@ router.get("/:id", (req: Request, res: Response<Patient>) => {
   const patient = patientService.getPatientById(id);
   if (patient) {
     res.send(patient);
-  } else {
+  }
+  else {
     res.sendStatus(404);
   }
+});
+
+const newEntryParser = (req: Request, _res: Response, next: NextFunction) => {
+  try {
+    newEntrySchema.parse(req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+router.post(
+  "/:id/entries",
+  newEntryParser,
+  (req: Request<{id: string}, unknown, NewEntry>, res: Response<Entry>) => {
+    const id = req.params.id;
+    const entry = patientService.addEntry(id, req.body);
+    if (entry) {
+      res.json(entry);
+    }
+    else {
+      res.sendStatus(404);
+    }
 });
 
 const newPatientParser = (req: Request, _res: Response, next: NextFunction) => {

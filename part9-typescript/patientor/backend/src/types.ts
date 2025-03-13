@@ -58,6 +58,29 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
+export const newEntrySchema = z.object({
+  description: z.string(),
+  date: z.string().date(),
+  specialist: z.string(),
+  diagnosisCodes: z.array(z.string()).optional(),
+  type: z.enum(["HealthCheck", "Hospital", "OccupationalHealthcare"]),
+  healthCheckRating: z.number().min(0).max(3).optional(),
+  employerName: z.string().optional(),
+  sickLeave: z.object({
+    startDate: z.string(),
+    endDate: z.string(),
+  }).optional(),
+  discharge: z.object({
+    date: z.string(),
+    criteria: z.string(),
+  }).optional(),
+});
+
+// Define special omit for unions
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+// Define Entry without the 'id' property
+export type NewEntry = UnionOmit<Entry, 'id'>;
+
 export const newPatientSchema = z.object({
   name: z.string(),
   dateOfBirth: z.string().date(),
