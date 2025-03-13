@@ -1,6 +1,8 @@
 import { SyntheticEvent, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   FormControl,
@@ -26,6 +28,7 @@ import {
 } from "../../types";
 import EntryFormTypeSpecificFields from "./EntryFormTypeSpecificFields";
 import patientService from "../../services/patients";
+import axios from "axios";
 
 
 interface Props {
@@ -50,6 +53,7 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
     string | undefined
     >(undefined);
   const [hospitalDischargeCriteria, setHospitalDischargeCriteria] = useState<string>("");
+  const [error, setError] = useState<{title: string, message: string} | undefined>(undefined);
 
   const assertNever = (value: never): never => {
     throw new Error(`Unhandled discriminated union member: ${value}`);
@@ -103,17 +107,32 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
       specialist,
       diagnosisCodes: diagnosisCodes,
     };
-    const entry = await patientService
+    try {
+      const entry = await patientService
       .addEntryToPatient(
         patient.id,
         processTypeSpecificFields(newBaseEntry),
       );
-    setPatient({
-      ...patient,
-      entries: patient.entries.concat(entry)
-    });
-    setIsNewEntryFormOpen(false);
+      setPatient({
+        ...patient,
+        entries: patient.entries.concat(entry)
+      });
+      setIsNewEntryFormOpen(false);
+    }
+    catch (error) {
+      if (axios.isAxiosError(error)) {
+        const firstError = error.response?.data.error[0];
+        setError({
+          title: `Error: Bad input: ${capitalizeFirstLetter(firstError.path[0])}`,
+          message: firstError.message
+        });
+      }
+    }
   };
+
+  function capitalizeFirstLetter(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
   const textFieldStyle = {
     my: "0.4em",
@@ -125,112 +144,117 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
   };
 
   return (
-    <Box component="fieldset">
-      <legend>
-        <Typography variant="h6">Add an entry</Typography>
-      </legend>
-      <Box component="form">
-        <FormControl fullWidth>
-          <FormLabel>Entry type</FormLabel>
-          <RadioGroup
-            row
-            value={type}
-            name="type"
-            onChange={({ target }) => {
-              const value = target.value as Entry["type"];
-              setType(value);
-            }}
-          >
-            <FormControlLabel
-              value="HealthCheck"
-              control={<Radio />}
-              label="Health Check"
-            />
-            <FormControlLabel
-              value="OccupationalHealthcare"
-              control={<Radio />}
-              label="Occupational Healthcare"
-            />
-            <FormControlLabel
-              value="Hospital"
-              control={<Radio />}
-              label="Hospital"
-            />
-          </RadioGroup>
-          <TextField
-            required
-            fullWidth
-            variant="outlined"
-            sx={textFieldStyle}
-            label="Description"
-            onChange={({ target }) => setDescription(target.value)}
-          />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Date"
-              format="YYYY-MM-DD"
-              value={date}
-              sx={datePickerStyle}
-              onChange={(newValue) => {
-                if (newValue)
-                  setDate(newValue);
+    <>
+      {error && <Alert severity="error" onClose={() => setError(undefined)}>
+        <AlertTitle>{error.title}</AlertTitle>
+        {error.message}
+      </Alert>}
+      <Box component="fieldset">
+        <legend>
+          <Typography variant="h6">Add an entry</Typography>
+        </legend>
+        <Box component="form">
+          <FormControl fullWidth>
+            <FormLabel>Entry type</FormLabel>
+            <RadioGroup
+              row
+              value={type}
+              name="type"
+              onChange={({ target }) => {
+                const value = target.value as Entry["type"];
+                setType(value);
               }}
-              slotProps={{
-                textField: {
-                  required: true,
-                },
-              }}
+            >
+              <FormControlLabel
+                value="HealthCheck"
+                control={<Radio />}
+                label="Health Check"
+              />
+              <FormControlLabel
+                value="OccupationalHealthcare"
+                control={<Radio />}
+                label="Occupational Healthcare"
+              />
+              <FormControlLabel
+                value="Hospital"
+                control={<Radio />}
+                label="Hospital"
+              />
+            </RadioGroup>
+            <TextField
+              required
+              fullWidth
+              variant="outlined"
+              sx={textFieldStyle}
+              label="Description"
+              onChange={({ target }) => setDescription(target.value)}
             />
-          </LocalizationProvider>
-          <TextField
-            required
-            fullWidth
-            variant="outlined"
-            sx={textFieldStyle}
-            label="Specialist"
-            onChange={({ target }) => setSpecialist(target.value)}
-          />
-          <TextField
-            fullWidth
-            variant="outlined"
-            sx={textFieldStyle}
-            label="Diagnosis codes"
-            onChange={({ target }) =>
-              setDiagnosisCodes(target.value.split(","))
-            }
-          />
-          <EntryFormTypeSpecificFields
-            type={type}
-            setHealthCheckRating={setHealthCheckRating}
-            setEmployerName={setEmployerName}
-            setSickLeaveStartDate={setSickLeaveStartDate}
-            setSickLeaveEndDate={setSickLeaveEndDate}
-            setHospitalDischargeDate={setHospitalDischargeDate}
-            setHospitalDischargeCriteria={setHospitalDischargeCriteria}
-            textFieldStyle={textFieldStyle}
-            datePickerStyle={datePickerStyle}
-          />
-          <Box sx={{ mt: "0.5em" }}>
-            <Button
-              variant="contained"
-              sx={{ float: "left" }}
-              color="secondary"
-              onClick={() => setIsNewEntryFormOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ float: "right" }}
-              type="submit"
-              onClick={submitNewEntry}
-            >
-              Add
-            </Button>
-          </Box>
-        </FormControl>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Date"
+                format="YYYY-MM-DD"
+                value={date}
+                sx={datePickerStyle}
+                onChange={(newValue) => {
+                  if (newValue) setDate(newValue);
+                }}
+                slotProps={{
+                  textField: {
+                    required: true,
+                  },
+                }}
+              />
+            </LocalizationProvider>
+            <TextField
+              required
+              fullWidth
+              variant="outlined"
+              sx={textFieldStyle}
+              label="Specialist"
+              onChange={({ target }) => setSpecialist(target.value)}
+            />
+            <TextField
+              fullWidth
+              variant="outlined"
+              sx={textFieldStyle}
+              label="Diagnosis codes"
+              onChange={({ target }) =>
+                setDiagnosisCodes(target.value.split(","))
+              }
+            />
+            <EntryFormTypeSpecificFields
+              type={type}
+              setHealthCheckRating={setHealthCheckRating}
+              setEmployerName={setEmployerName}
+              setSickLeaveStartDate={setSickLeaveStartDate}
+              setSickLeaveEndDate={setSickLeaveEndDate}
+              setHospitalDischargeDate={setHospitalDischargeDate}
+              setHospitalDischargeCriteria={setHospitalDischargeCriteria}
+              textFieldStyle={textFieldStyle}
+              datePickerStyle={datePickerStyle}
+            />
+            <Box sx={{ mt: "0.5em" }}>
+              <Button
+                variant="contained"
+                sx={{ float: "left" }}
+                color="secondary"
+                onClick={() => setIsNewEntryFormOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ float: "right" }}
+                type="submit"
+                onClick={submitNewEntry}
+              >
+                Add
+              </Button>
+            </Box>
+          </FormControl>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

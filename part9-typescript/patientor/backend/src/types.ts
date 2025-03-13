@@ -59,21 +59,25 @@ export type Entry =
   | HealthCheckEntry;
 
 export const newEntrySchema = z.object({
-  description: z.string(),
+  description: z.string().nonempty(),
   date: z.string().date(),
-  specialist: z.string(),
+  specialist: z.string().nonempty(),
   diagnosisCodes: z.array(z.string()).optional(),
   type: z.enum(["HealthCheck", "Hospital", "OccupationalHealthcare"]),
   healthCheckRating: z.number().min(0).max(3).optional(),
-  employerName: z.string().optional(),
-  sickLeave: z.object({
-    startDate: z.string(),
-    endDate: z.string(),
-  }).optional(),
-  discharge: z.object({
-    date: z.string(),
-    criteria: z.string(),
-  }).optional(),
+  employerName: z.string().nonempty().optional(),
+  sickLeave: z
+    .object({
+      startDate: z.string().date(),
+      endDate: z.string().date(),
+    })
+    .optional(),
+  discharge: z
+    .object({
+      date: z.string().date(),
+      criteria: z.string().date(),
+    })
+    .optional(),
 });
 
 // Define special omit for unions
