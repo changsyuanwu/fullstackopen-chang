@@ -3,7 +3,7 @@ import { Patient } from "../../types";
 import EntryDetails from "./EntryDetails";
 
 interface Props {
-  patient: Patient
+  patient: Patient;
 }
 
 const PatientEntries = ({ patient }: Props) => {
@@ -15,9 +15,11 @@ const PatientEntries = ({ patient }: Props) => {
       >
         entries
       </Typography>
-      {patient.entries.map((entry) => (
-        <EntryDetails entry={entry} key={entry.id} />
-      ))}
+      {patient.entries
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .map((entry) => (
+          <EntryDetails entry={entry} key={entry.id} />
+        ))}
     </div>
   );
 };
