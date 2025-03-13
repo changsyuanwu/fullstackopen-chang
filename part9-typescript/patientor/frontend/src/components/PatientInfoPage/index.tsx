@@ -7,6 +7,7 @@ import TransgenderIcon from "@mui/icons-material/Transgender";
 
 import patientService from "../../services/patients";
 import { Gender, Patient } from "../../types";
+import PatientEntries from "./PatientEntries";
 
 const PatientInfoPage = () => {
   const match = useMatch("/patients/:id");
@@ -27,11 +28,11 @@ const PatientInfoPage = () => {
   const renderGenderIcon = () => {
     switch (patient.gender) {
       case Gender.Male:
-        return <MaleIcon />;
+        return <MaleIcon fontSize="large" />;
       case Gender.Female:
-        return <FemaleIcon />;
+        return <FemaleIcon fontSize="large" />;
       case Gender.Other:
-        return <TransgenderIcon />;
+        return <TransgenderIcon fontSize="large" />;
     }
   };
 
@@ -43,6 +44,7 @@ const PatientInfoPage = () => {
       <Typography>date of birth: {patient.dateOfBirth}</Typography>
       <Typography>ssn: {patient.ssn}</Typography>
       <Typography>occupation: {patient.occupation}</Typography>
+      <PatientEntries patient={patient} />
     </div>
   );
 };
