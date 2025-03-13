@@ -1,4 +1,5 @@
 import { Entry } from "../../types";
+import HealthCheckEntry from "./HealthCheckEntry";
 import HospitalEntry from "./HospitalEntry";
 import OccupationalHealthcareEntry from "./OccupationalHealthcareEntry";
 
@@ -15,7 +16,7 @@ const EntryDetails = ({ entry }: Props) => {
     case "Hospital":
       return <HospitalEntry entry={entry} />;
     case "HealthCheck":
-      return <></>;
+      return <HealthCheckEntry entry={entry}/>;
     case "OccupationalHealthcare":
       return <OccupationalHealthcareEntry entry={entry} />;
     default:
