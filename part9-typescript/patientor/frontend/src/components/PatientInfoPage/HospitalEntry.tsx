@@ -34,6 +34,7 @@ const HospitalEntry = ({ entry, diagnoses }: Props) => {
           </Box>
         </Typography>
       )}
+      <Typography>diagnosed by {entry.specialist}</Typography>
     </Box>
   );
 };
