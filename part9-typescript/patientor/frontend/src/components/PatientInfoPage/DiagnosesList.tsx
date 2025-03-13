@@ -19,7 +19,7 @@ const DiagnosesList = ({ diagnosisCodes }: Props) => {
   }, []);
 
 
-  if (!diagnosisCodes) {
+  if (!diagnosisCodes || diagnosisCodes.length === 0) {
     return <></>;
   }
 
