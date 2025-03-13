@@ -1,7 +1,8 @@
-import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Diagnosis, Patient } from "../../types";
 import diagnosesService from "../../services/diagnoses";
+import EntryDetails from "./EntryDetails";
 
 interface Props {
   patient: Patient
@@ -27,24 +28,7 @@ const PatientEntries = ({ patient }: Props) => {
         entries
       </Typography>
       {patient.entries.map((entry) => (
-        <div key={entry.id}>
-          <Typography component="div">
-            {entry.date}{" "}
-            <Box component="span" sx={{ fontStyle: "italic" }}>
-              {entry.description}
-            </Box>
-          </Typography>
-          <List>
-            {entry.diagnosisCodes?.map((code) => (
-              <ListItem sx={{ listStyleType: "disc", pl: 4 }} key={code}>
-                <ListItemText
-                  sx={{ display: "list-item" }}
-                  primary={`${code} ${diagnoses.find(d => d.code === code)?.name}`}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </div>
+        <EntryDetails entry={entry} diagnoses={diagnoses} key={entry.id} />
       ))}
     </div>
   );
