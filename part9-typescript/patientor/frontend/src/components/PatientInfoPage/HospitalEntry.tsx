@@ -1,31 +1,20 @@
-import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
-import type { Diagnosis, HospitalEntry } from "../../types";
+import type { HospitalEntry } from "../../types";
+import DiagnosesList from "./DiagnosesList";
 
 interface Props {
   entry: HospitalEntry,
-  diagnoses: Diagnosis[]
 }
 
-const HospitalEntry = ({ entry, diagnoses }: Props) => {
+const HospitalEntry = ({ entry }: Props) => {
   return (
     <Box component="fieldset">
       <Typography>
         {entry.date} <LocalHospitalIcon fontSize="large" />
       </Typography>
       <Typography sx={{ fontStyle: "italic" }}>{entry.description}</Typography>
-      <List>
-        {entry.diagnosisCodes?.map((code) => (
-          <ListItem sx={{ listStyleType: "disc", pl: 4 }} key={code}>
-            <ListItemText
-              sx={{ display: "list-item" }}
-              primary={`${code} ${
-                diagnoses.find((d) => d.code === code)?.name
-              }`}
-            />
-          </ListItem>
-        ))}
-      </List>
+      <DiagnosesList diagnosisCodes={entry.diagnosisCodes} />
       {entry.discharge && (
         <Typography>
           Patient was discharged on {entry.discharge.date} under criteria:{" "}

@@ -1,7 +1,5 @@
 import { Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Diagnosis, Patient } from "../../types";
-import diagnosesService from "../../services/diagnoses";
+import { Patient } from "../../types";
 import EntryDetails from "./EntryDetails";
 
 interface Props {
@@ -9,16 +7,6 @@ interface Props {
 }
 
 const PatientEntries = ({ patient }: Props) => {
-  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
-
-  useEffect(() => {
-    const fetchDiagnosesList = async () => {
-      const diagnoses = await diagnosesService.getAll();
-      setDiagnoses(diagnoses);
-    };
-    void fetchDiagnosesList();
-  }, []);
-
   return (
     <div>
       <Typography
@@ -28,7 +16,7 @@ const PatientEntries = ({ patient }: Props) => {
         entries
       </Typography>
       {patient.entries.map((entry) => (
-        <EntryDetails entry={entry} diagnoses={diagnoses} key={entry.id} />
+        <EntryDetails entry={entry} key={entry.id} />
       ))}
     </div>
   );

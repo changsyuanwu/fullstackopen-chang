@@ -1,23 +1,23 @@
-import { Diagnosis, Entry } from "../../types";
+import { Entry } from "../../types";
 import HospitalEntry from "./HospitalEntry";
+import OccupationalHealthcareEntry from "./OccupationalHealthcareEntry";
 
 interface Props {
   entry: Entry,
-  diagnoses: Diagnosis[],
 }
 
-const EntryDetails = ({ entry, diagnoses }: Props) => {
+const EntryDetails = ({ entry }: Props) => {
   const assertNever = (value: never): never => {
     throw new Error(`Unhandled discriminated union member: ${value}`);
   };
 
   switch (entry.type) {
     case "Hospital":
-      return <HospitalEntry entry={entry} diagnoses={diagnoses} />;
+      return <HospitalEntry entry={entry} />;
     case "HealthCheck":
       return <></>;
     case "OccupationalHealthcare":
-      return <></>;
+      return <OccupationalHealthcareEntry entry={entry} />;
     default:
       return assertNever(entry);
   }
