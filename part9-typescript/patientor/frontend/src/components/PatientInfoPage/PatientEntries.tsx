@@ -1,11 +1,23 @@
 import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
-import { Patient } from "../../types";
+import { useEffect, useState } from "react";
+import { Diagnosis, Patient } from "../../types";
+import diagnosesService from "../../services/diagnoses";
 
 interface Props {
   patient: Patient
 }
 
 const PatientEntries = ({ patient }: Props) => {
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+
+  useEffect(() => {
+    const fetchDiagnosesList = async () => {
+      const diagnoses = await diagnosesService.getAll();
+      setDiagnoses(diagnoses);
+    };
+    void fetchDiagnosesList();
+  }, []);
+
   return (
     <div>
       <Typography
@@ -18,12 +30,17 @@ const PatientEntries = ({ patient }: Props) => {
         <div key={entry.id}>
           <Typography component="div">
             {entry.date}{" "}
-            <Box component="span" sx={{ fontStyle: "italic" }}>{entry.description}</Box>
+            <Box component="span" sx={{ fontStyle: "italic" }}>
+              {entry.description}
+            </Box>
           </Typography>
           <List>
             {entry.diagnosisCodes?.map((code) => (
               <ListItem sx={{ listStyleType: "disc", pl: 4 }} key={code}>
-                <ListItemText primary={code} sx={{ display: "list-item" }} />
+                <ListItemText
+                  sx={{ display: "list-item" }}
+                  primary={`${code} ${diagnoses.find(d => d.code === code)?.name}`}
+                />
               </ListItem>
             ))}
           </List>
