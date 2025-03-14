@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
 import { HealthCheckRating, type HealthCheckEntry } from "../../types";
 import DiagnosesList from "./DiagnosesList";
+import DiagnosedBy from "./DiagnosedBy";
 
 interface Props {
   entry: HealthCheckEntry;
@@ -21,7 +22,7 @@ const HealthCheckEntry = ({ entry }: Props) => {
           {HealthCheckRating[entry.healthCheckRating]}
         </Box>
       </Typography>
-      <Typography>diagnosed by {entry.specialist}</Typography>
+      <DiagnosedBy name={entry.specialist} />
     </Box>
   );
 };

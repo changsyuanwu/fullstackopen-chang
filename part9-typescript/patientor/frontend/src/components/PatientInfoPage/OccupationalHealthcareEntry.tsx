@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import type { OccupationalHealthcareEntry } from "../../types";
 import DiagnosesList from "./DiagnosesList";
+import DiagnosedBy from "./DiagnosedBy";
 
 interface Props {
   entry: OccupationalHealthcareEntry
@@ -22,7 +23,7 @@ const OccupationalHealthcareEntry = ({ entry }: Props) => {
           ending on {entry.sickLeave.endDate}
         </Typography>
       )}
-      <Typography>diagnosed by {entry.specialist}</Typography>
+      <DiagnosedBy name={entry.specialist} />
     </Box>
   );
 };

@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import type { HospitalEntry } from "../../types";
 import DiagnosesList from "./DiagnosesList";
+import DiagnosedBy from "./DiagnosedBy";
 
 interface Props {
   entry: HospitalEntry,
@@ -23,7 +24,7 @@ const HospitalEntry = ({ entry }: Props) => {
           </Box>
         </Typography>
       )}
-      <Typography>diagnosed by {entry.specialist}</Typography>
+      <DiagnosedBy name={entry.specialist} />
     </Box>
   );
 };
