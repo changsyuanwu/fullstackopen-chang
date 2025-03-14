@@ -1,4 +1,11 @@
-import { FormLabel, RadioGroup, FormControlLabel, Radio, TextField } from "@mui/material";
+import {
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  TextField,
+  FormControl,
+} from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Entry } from "../../types";
@@ -37,15 +44,13 @@ const EntryFormTypeSpecificFields = ({
   switch (type) {
     case "HealthCheck":
       return (
-        <>
+        <FormControl fullWidth>
           <FormLabel sx={{ mt: "0.5em" }}>Health Check Rating</FormLabel>
           <RadioGroup
             row
             name="healthCheckRating"
             defaultValue="Healthy"
-            onChange={({ target }) =>
-              setHealthCheckRating(target.value)
-            }
+            onChange={({ target }) => setHealthCheckRating(target.value)}
           >
             <FormControlLabel
               value="Healthy"
@@ -68,7 +73,7 @@ const EntryFormTypeSpecificFields = ({
               label="Critical Risk"
             />
           </RadioGroup>
-        </>
+        </FormControl>
       );
     case "OccupationalHealthcare":
       return (

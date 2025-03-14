@@ -22,7 +22,7 @@ const DiagnosesList = ({ diagnosisCodes }: Props) => {
   if (!diagnosisCodes || diagnosisCodes.length === 0) {
     return <></>;
   }
-
+  
   return (
     <List>
       {diagnosisCodes.map((code) => (

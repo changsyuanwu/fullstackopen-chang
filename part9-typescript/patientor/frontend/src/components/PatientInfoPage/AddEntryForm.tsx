@@ -1,15 +1,22 @@
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
+import axios from "axios";
 import {
   Alert,
   AlertTitle,
   Box,
   Button,
+  Chip,
   FormControl,
   FormControlLabel,
   FormLabel,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
   Radio,
   RadioGroup,
+  Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
@@ -25,21 +32,23 @@ import {
   OccupationalHealthcareEntry,
   HealthCheckEntry,
   NewBaseEntry,
+  Diagnosis,
 } from "../../types";
 import EntryFormTypeSpecificFields from "./EntryFormTypeSpecificFields";
 import patientService from "../../services/patients";
-import axios from "axios";
-
+import diagnosesService from "../../services/diagnoses";
 
 interface Props {
   patient: Patient;
   setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
-  setIsNewEntryFormOpen: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
+  setIsNewEntryFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => {
+const AddEntryForm = ({
+  patient,
+  setPatient,
+  setIsNewEntryFormOpen,
+}: Props) => {
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<Dayjs>(dayjs());
   const [specialist, setSpecialist] = useState<string>("");
@@ -47,13 +56,29 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
   const [type, setType] = useState<Entry["type"]>("HealthCheck");
   const [healthCheckRating, setHealthCheckRating] = useState<string>("Healthy");
   const [employerName, setEmployerName] = useState<string>("");
-  const [sickLeaveStartDate, setSickLeaveStartDate] = useState<string | undefined>(undefined);
-  const [sickLeaveEndDate, setSickLeaveEndDate] = useState<string | undefined>(undefined);
+  const [sickLeaveStartDate, setSickLeaveStartDate] = useState<
+    string | undefined
+  >(undefined);
+  const [sickLeaveEndDate, setSickLeaveEndDate] = useState<string | undefined>(
+    undefined
+  );
   const [hospitalDischargeDate, setHospitalDischargeDate] = useState<
     string | undefined
-    >(undefined);
-  const [hospitalDischargeCriteria, setHospitalDischargeCriteria] = useState<string>("");
-  const [error, setError] = useState<{title: string, message: string} | undefined>(undefined);
+  >(undefined);
+  const [hospitalDischargeCriteria, setHospitalDischargeCriteria] =
+    useState<string>("");
+  const [error, setError] = useState<
+    { title: string; message: string } | undefined
+  >(undefined);
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+
+  useEffect(() => {
+    const fetchDiagnosesList = async () => {
+      const diagnoses = await diagnosesService.getAll();
+      setDiagnoses(diagnoses);
+    };
+    void fetchDiagnosesList();
+  }, []);
 
   const assertNever = (value: never): never => {
     throw new Error(`Unhandled discriminated union member: ${value}`);
@@ -66,7 +91,10 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
           ...newBaseEntry,
           type,
         } as HealthCheckEntry;
-        newHealthCheckEntry.healthCheckRating = HealthCheckRating[healthCheckRating as keyof typeof HealthCheckRating];
+        newHealthCheckEntry.healthCheckRating =
+          HealthCheckRating[
+            healthCheckRating as keyof typeof HealthCheckRating
+          ];
         return newHealthCheckEntry;
       case "Hospital":
         const newHospitalEntry: NewEntry = {
@@ -108,23 +136,23 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
       diagnosisCodes: diagnosisCodes,
     };
     try {
-      const entry = await patientService
-      .addEntryToPatient(
+      const entry = await patientService.addEntryToPatient(
         patient.id,
-        processTypeSpecificFields(newBaseEntry),
+        processTypeSpecificFields(newBaseEntry)
       );
       setPatient({
         ...patient,
-        entries: patient.entries.concat(entry)
+        entries: patient.entries.concat(entry),
       });
       setIsNewEntryFormOpen(false);
-    }
-    catch (error) {
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         const firstError = error.response?.data.error[0];
         setError({
-          title: `Error: Bad input: ${capitalizeFirstLetter(firstError.path[0])}`,
-          message: firstError.message
+          title: `Error: Bad input: ${capitalizeFirstLetter(
+            firstError.path[0]
+          )}`,
+          message: firstError.message,
         });
       }
     }
@@ -133,6 +161,15 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
   function capitalizeFirstLetter(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+
+  const handleDiagnosisCodeChange = (
+    event: SelectChangeEvent<typeof diagnosisCodes>
+  ) => {
+    const {
+      target: { value },
+    } = event;
+    setDiagnosisCodes(typeof value === "string" ? value.split(",") : value);
+  };
 
   const textFieldStyle = {
     my: "0.4em",
@@ -143,23 +180,35 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
     width: "15em",
   };
 
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 48 * 4.5 + 8,
+        width: 250,
+      },
+    },
+  };
+
   return (
     <>
-      {error && <Alert severity="error" onClose={() => setError(undefined)}>
-        <AlertTitle>{error.title}</AlertTitle>
-        {error.message}
-      </Alert>}
+      {error && (
+        <Alert severity="error" onClose={() => setError(undefined)}>
+          <AlertTitle>{error.title}</AlertTitle>
+          {error.message}
+        </Alert>
+      )}
       <Box component="fieldset">
         <legend>
           <Typography variant="h6">Add an entry</Typography>
         </legend>
         <Box component="form">
           <FormControl fullWidth>
-            <FormLabel>Entry type</FormLabel>
+            <FormLabel id="entry-type-label">Entry type</FormLabel>
             <RadioGroup
               row
               value={type}
               name="type"
+              aria-labelledby="entry-type-label"
               onChange={({ target }) => {
                 const value = target.value as Entry["type"];
                 setType(value);
@@ -181,77 +230,101 @@ const AddEntryForm = ({ patient, setPatient, setIsNewEntryFormOpen }: Props) => 
                 label="Hospital"
               />
             </RadioGroup>
-            <TextField
-              required
-              fullWidth
-              variant="outlined"
-              sx={textFieldStyle}
-              label="Description"
-              onChange={({ target }) => setDescription(target.value)}
-            />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Date"
-                format="YYYY-MM-DD"
-                value={date}
-                sx={datePickerStyle}
-                onChange={(newValue) => {
-                  if (newValue) setDate(newValue);
-                }}
-                slotProps={{
-                  textField: {
-                    required: true,
-                  },
-                }}
-              />
-            </LocalizationProvider>
-            <TextField
-              required
-              fullWidth
-              variant="outlined"
-              sx={textFieldStyle}
-              label="Specialist"
-              onChange={({ target }) => setSpecialist(target.value)}
-            />
-            <TextField
-              fullWidth
-              variant="outlined"
-              sx={textFieldStyle}
-              label="Diagnosis codes"
-              onChange={({ target }) =>
-                setDiagnosisCodes(target.value.split(","))
-              }
-            />
-            <EntryFormTypeSpecificFields
-              type={type}
-              setHealthCheckRating={setHealthCheckRating}
-              setEmployerName={setEmployerName}
-              setSickLeaveStartDate={setSickLeaveStartDate}
-              setSickLeaveEndDate={setSickLeaveEndDate}
-              setHospitalDischargeDate={setHospitalDischargeDate}
-              setHospitalDischargeCriteria={setHospitalDischargeCriteria}
-              textFieldStyle={textFieldStyle}
-              datePickerStyle={datePickerStyle}
-            />
-            <Box sx={{ mt: "0.5em" }}>
-              <Button
-                variant="contained"
-                sx={{ float: "left" }}
-                color="secondary"
-                onClick={() => setIsNewEntryFormOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ float: "right" }}
-                type="submit"
-                onClick={submitNewEntry}
-              >
-                Add
-              </Button>
-            </Box>
           </FormControl>
+          <TextField
+            required
+            fullWidth
+            variant="outlined"
+            sx={textFieldStyle}
+            label="Description"
+            onChange={({ target }) => setDescription(target.value)}
+          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Date"
+              format="YYYY-MM-DD"
+              value={date}
+              sx={datePickerStyle}
+              onChange={(newValue) => {
+                if (newValue) setDate(newValue);
+              }}
+              slotProps={{
+                textField: {
+                  required: true,
+                },
+              }}
+            />
+          </LocalizationProvider>
+          <TextField
+            required
+            fullWidth
+            variant="outlined"
+            sx={textFieldStyle}
+            label="Specialist"
+            onChange={({ target }) => setSpecialist(target.value)}
+          />
+          <FormControl fullWidth>
+            <InputLabel id="diagnosis-codes-label" sx={textFieldStyle}>
+              Diagnosis codes
+            </InputLabel>
+            <Select
+              labelId="diagnosis-codes-label"
+              id="diagnosis"
+              multiple
+              input={
+                <OutlinedInput
+                  id="select-multiple-diagnosis"
+                  label="Diagnosis code"
+                />
+              }
+              value={diagnosisCodes}
+              onChange={handleDiagnosisCodeChange}
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              sx={textFieldStyle}
+              MenuProps={MenuProps}
+            >
+              {diagnoses.map((d) => (
+                <MenuItem key={d.code} value={d.code}>
+                  {d.code} {d.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <EntryFormTypeSpecificFields
+            type={type}
+            setHealthCheckRating={setHealthCheckRating}
+            setEmployerName={setEmployerName}
+            setSickLeaveStartDate={setSickLeaveStartDate}
+            setSickLeaveEndDate={setSickLeaveEndDate}
+            setHospitalDischargeDate={setHospitalDischargeDate}
+            setHospitalDischargeCriteria={setHospitalDischargeCriteria}
+            textFieldStyle={textFieldStyle}
+            datePickerStyle={datePickerStyle}
+          />
+          <Box sx={{ mt: "0.5em" }}>
+            <Button
+              variant="contained"
+              sx={{ float: "left" }}
+              color="secondary"
+              onClick={() => setIsNewEntryFormOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ float: "right" }}
+              type="submit"
+              onClick={submitNewEntry}
+            >
+              Add
+            </Button>
+          </Box>
         </Box>
       </Box>
     </>
